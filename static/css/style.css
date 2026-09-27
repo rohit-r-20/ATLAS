@@ -767,6 +767,30 @@ h1, h2, h3, h4, h5, h6 {
   flex-shrink: 0 !important;
 }
 
+.warranty-logo-box {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 6px;
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.warranty-brand-logo {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
 .warranty-name {
   flex: 1 !important;
   white-space: nowrap !important;
