@@ -154,7 +154,7 @@
       </a>
       {% for b in businesses %}
       <a href="{{ url_for('admin.products', business=b.slug, view=current_view) }}" style="padding: 0.5rem 1rem; text-decoration: none; font-weight: 600; color: {% if current_business == b.slug %}var(--primary-700, #0369a1){% else %}var(--text-muted, #64748b){% endif %}; border-bottom: 2px solid {% if current_business == b.slug %}var(--primary-600, #0284c7){% else %}transparent{% endif %}; margin-bottom: -0.6rem;">
-        {{ b.icon }} {{ b.name }}
+        {{ b.icon }} {% if b.slug == 'hardware' %}Sathik Hardwares{% elif b.slug == 'plumbing' %}Sathik Traders{% elif b.slug == 'bath-kitchen' %}Sathik Enterprises{% else %}{{ b.name }}{% endif %}
       </a>
       {% endfor %}
     </div>
@@ -192,9 +192,9 @@
               <td style="font-family: monospace; font-size: 0.85rem; font-weight: 600; color: #64748b;">{{ p.sku }}</td>
               <td>
                 <span class="badge badge-featured">
-                  {% if p.business_slug == 'plumbing' %}🔧 Plumbing
-                  {% elif p.business_slug == 'hardware' %}🔨 Hardware
-                  {% elif p.business_slug == 'bath-kitchen' %}🛁 Bathware
+                  {% if p.business_slug == 'plumbing' %}🔧 Sathik Traders
+                  {% elif p.business_slug == 'hardware' %}🔨 Sathik Hardwares
+                  {% elif p.business_slug == 'bath-kitchen' %}🛁 Sathik Enterprises
                   {% else %}{{ p.business_slug|title }}
                   {% endif %}
                 </span>
@@ -292,9 +292,9 @@
               <td style="font-family: monospace; font-size: 0.85rem; font-weight: 600;">{{ p.sku }}</td>
               <td>
                 <span class="badge badge-featured">
-                  {% if p.business_slug == 'plumbing' %}🔧 Plumbing
-                  {% elif p.business_slug == 'hardware' %}🔨 Hardware
-                  {% elif p.business_slug == 'bath-kitchen' %}🛁 Bathware
+                  {% if p.business_slug == 'plumbing' %}🔧 Sathik Traders
+                  {% elif p.business_slug == 'hardware' %}🔨 Sathik Hardwares
+                  {% elif p.business_slug == 'bath-kitchen' %}🛁 Sathik Enterprises
                   {% else %}{{ p.business_slug|title }}
                   {% endif %}
                 </span>
@@ -394,7 +394,9 @@
                 <label class="form-label">Store / Business Vertical *</label>
                 <select id="create-business-slug" name="business_slug" class="form-select" onchange="onBusinessChange('create')">
                   {% for b in businesses %}
-                  <option value="{{ b.slug }}" {% if current_business == b.slug %}selected{% endif %}>{{ b.icon }} {{ b.name }}</option>
+                  <option value="{{ b.slug }}" {% if current_business == b.slug %}selected{% endif %}>
+                    {{ b.icon }} {% if b.slug == 'hardware' %}Sathik Hardwares{% elif b.slug == 'plumbing' %}Sathik Traders{% elif b.slug == 'bath-kitchen' %}Sathik Enterprises{% else %}{{ b.name }}{% endif %}
+                  </option>
                   {% endfor %}
                 </select>
               </div>
@@ -548,7 +550,9 @@
                 <label class="form-label">Store / Business Vertical *</label>
                 <select id="edit-business-slug" name="business_slug" class="form-select" onchange="onBusinessChange('edit')">
                   {% for b in businesses %}
-                  <option value="{{ b.slug }}">{{ b.icon }} {{ b.name }}</option>
+                  <option value="{{ b.slug }}">
+                    {{ b.icon }} {% if b.slug == 'hardware' %}Sathik Hardwares{% elif b.slug == 'plumbing' %}Sathik Traders{% elif b.slug == 'bath-kitchen' %}Sathik Enterprises{% else %}{{ b.name }}{% endif %}
+                  </option>
                   {% endfor %}
                 </select>
               </div>
@@ -698,7 +702,9 @@
               <label class="form-label">Store / Business Vertical *</label>
               <select id="direct-cat-business-slug" name="business_slug" class="form-select" required>
                 {% for b in businesses %}
-                <option value="{{ b.slug }}" {% if current_business == b.slug %}selected{% endif %}>{{ b.icon }} {{ b.name }}</option>
+                <option value="{{ b.slug }}" {% if current_business == b.slug %}selected{% endif %}>
+                  {{ b.icon }} {% if b.slug == 'hardware' %}Sathik Hardwares{% elif b.slug == 'plumbing' %}Sathik Traders{% elif b.slug == 'bath-kitchen' %}Sathik Enterprises{% else %}{{ b.name }}{% endif %}
+                </option>
                 {% endfor %}
               </select>
             </div>
