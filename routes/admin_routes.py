@@ -548,19 +548,110 @@ def delete_brand(brand_id):
 @admin_required
 def enquiries():
     page = int(request.args.get('page', 1))
-    status_filter = request.args.get('status', '')
-    enquiry_list, total = EnquiryModel.find_all(status=status_filter or None, page=page, limit=20)
+    status_filter = request.args.get('status', '').strip()
+    view_filter = request.args.get('view', 'active').strip()
+    search_query = request.args.get('q', '').strip()
+    limit = 20
+
+    enquiry_list, total = EnquiryModel.find_all(
+        status=status_filter or None,
+        view=view_filter,
+        search=search_query or None,
+        page=page,
+        limit=limit
+    )
     stats = EnquiryModel.get_stats()
-    return render_template('admin/enquiries.html', enquiries=enquiry_list, stats=stats, current_status=status_filter)
+    total_pages = (total + limit - 1) // limit if total > 0 else 1
+    recycle_bin_count = stats.get('recycle_bin', 0)
+
+    return render_template(
+        'admin/enquiries.html',
+        enquiries=enquiry_list,
+        stats=stats,
+        current_status=status_filter,
+        current_view=view_filter,
+        search_query=search_query,
+        page=page,
+        total_pages=total_pages,
+        total_enquiries=total,
+        recycle_bin_count=recycle_bin_count
+    )
 
 @admin_bp.route('/enquiries/<enquiry_id>/status', methods=['POST'])
 @admin_required
 def update_enquiry_status(enquiry_id):
-    status = request.form.get('status', 'read')
-    notes = request.form.get('notes', '')
-    EnquiryModel.update_status(enquiry_id, status, notes)
-    flash('Enquiry status updated.', 'success')
-    return redirect(url_for('admin.enquiries'))
+    if request.is_json:
+        data = request.get_json() or {}
+        status = data.get('status', 'read')
+        notes = data.get('notes') or data.get('admin_notes')
+    else:
+        status = request.form.get('status', 'read')
+        notes = request.form.get('notes', None)
+
+    success = EnquiryModel.update_status(enquiry_id, status, notes)
+    if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': bool(success), 'status': status, 'notes': notes}), 200
+
+    flash('Enquiry status updated successfully.', 'success')
+    view = request.args.get('current_view', 'active')
+    return redirect(url_for('admin.enquiries', view=view, status=request.args.get('current_status', '')))
+
+@admin_bp.route('/enquiries/<enquiry_id>/delete', methods=['POST'])
+@admin_required
+def delete_enquiry(enquiry_id):
+    """Soft-delete: moves enquiry to the Recycle Bin."""
+    success = EnquiryModel.soft_delete(enquiry_id)
+    if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': bool(success), 'action': 'soft_delete'}), 200
+
+    if success:
+        flash('Enquiry moved to Recycle Bin. You can restore it anytime.', 'success')
+    else:
+        flash('Enquiry not found or could not be moved to Recycle Bin.', 'danger')
+
+    return redirect(url_for('admin.enquiries', status=request.args.get('current_status', '')))
+
+@admin_bp.route('/enquiries/<enquiry_id>/restore', methods=['POST'])
+@admin_required
+def restore_enquiry(enquiry_id):
+    """Restores an enquiry from the Recycle Bin back to active."""
+    success = EnquiryModel.restore(enquiry_id)
+    if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': bool(success), 'action': 'restore'}), 200
+
+    if success:
+        flash('Enquiry restored successfully to active enquiries.', 'success')
+    else:
+        flash('Failed to restore enquiry.', 'danger')
+
+    return redirect(url_for('admin.enquiries', view='recycle_bin'))
+
+@admin_bp.route('/enquiries/<enquiry_id>/permanent-delete', methods=['POST'])
+@admin_required
+def permanent_delete_enquiry(enquiry_id):
+    """Permanently purges an enquiry."""
+    success = EnquiryModel.permanent_delete(enquiry_id)
+    if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': bool(success), 'action': 'permanent_delete'}), 200
+
+    if success:
+        flash('Enquiry permanently deleted.', 'success')
+    else:
+        flash('Failed to permanently delete enquiry.', 'danger')
+
+    view = request.args.get('current_view', 'recycle_bin')
+    return redirect(url_for('admin.enquiries', view=view))
+
+@admin_bp.route('/enquiries/empty-recycle-bin', methods=['POST'])
+@admin_required
+def empty_enquiries_recycle_bin():
+    """Permanently deletes all soft-deleted items in the enquiry recycle bin."""
+    purged_count = EnquiryModel.empty_recycle_bin()
+    if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': True, 'purged_count': purged_count}), 200
+
+    flash(f'Recycle Bin emptied successfully. {purged_count} enquiries permanently purged.', 'success')
+    return redirect(url_for('admin.enquiries', view='recycle_bin'))
 
 @admin_bp.route('/orders')
 @admin_bp.route('/quotations')

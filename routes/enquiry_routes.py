@@ -32,36 +32,49 @@ def submit_enquiry():
             "message": "Unable to save enquiry."
         }), 400
 
+    # Pre-generate WhatsApp message & deep-link
+    whatsapp_info = {}
+    try:
+        whatsapp_info = process_whatsapp_enquiry(data)
+    except Exception as wa_err:
+        print(f"⚠️ WhatsApp processing notice: {wa_err}")
+
+    whatsapp_url = whatsapp_info.get("whatsapp_url") or data.get("whatsapp_url") or ""
+
+    items_json = data.get('items_json') or ''
+    product_sku = (data.get('product_sku') or data.get('sku') or '').strip()
+    quantity = data.get('quantity') or data.get('qty') or ''
+    submission_type = data.get('type') or ('quote_list' if items_json else 'quote')
+
     enquiry_data = {
         'customer_name': customer_name,
         'mobile_number': mobile_number,
         'email': email,
         'address': address,
+        'city': address,
         'interested_in': interested_in,
         'product_name': product_name,
+        'product_sku': product_sku,
+        'quantity': quantity,
         'preferred_contact': preferred_contact,
         'message': message,
         'page_url': page_url,
+        'items_json': items_json,
+        'type': submission_type,
+        'whatsapp_url': whatsapp_url,
         'status': 'New'
     }
 
     try:
-        success = EnquiryService.create_enquiry(enquiry_data)
-        if success:
+        enquiry_record = EnquiryService.create_enquiry(enquiry_data)
+        if enquiry_record:
             # Send Resend email notification (non-blocking if it fails)
             try:
                 send_enquiry_email(enquiry_data)
             except Exception as mail_err:
                 print(f"⚠️ Email notification trigger notice: {mail_err}")
 
-            # WhatsApp Automation Trigger & URL generation
-            whatsapp_info = {}
-            try:
-                whatsapp_info = process_whatsapp_enquiry(enquiry_data)
-            except Exception as wa_err:
-                print(f"⚠️ WhatsApp processing notice: {wa_err}")
-
-            # Record quotation so it appears in the Admin Quotation section
+            # Also record quotation so it appears in the Admin Quotation section
             try:
                 from models.quotation import QuotationModel
                 quote_payload = {
@@ -72,13 +85,13 @@ def submit_enquiry():
                     'address': address,
                     'interested_in': interested_in,
                     'product_name': product_name,
-                    'product_sku': data.get('product_sku') or data.get('sku') or '',
-                    'quantity': data.get('quantity') or data.get('qty') or '',
+                    'product_sku': product_sku,
+                    'quantity': quantity,
                     'preferred_contact': preferred_contact,
                     'message': message,
-                    'type': data.get('type') or 'quote',
-                    'items_json': data.get('items_json') or '',
-                    'whatsapp_url': whatsapp_info.get("whatsapp_url") or ''
+                    'type': submission_type,
+                    'items_json': items_json,
+                    'whatsapp_url': whatsapp_url
                 }
                 quote_record = QuotationModel.create(quote_payload)
             except Exception as quote_err:
@@ -88,8 +101,10 @@ def submit_enquiry():
             return jsonify({
                 "success": True,
                 "message": "Thank you! Your quote request has been received.",
-                "whatsapp_url": whatsapp_info.get("whatsapp_url"),
+                "whatsapp_url": whatsapp_url,
                 "target_phone": whatsapp_info.get("target_phone"),
+                "enquiry_id": enquiry_record.get("id") if isinstance(enquiry_record, dict) else None,
+                "enquiry_reference": enquiry_record.get("reference_id") if isinstance(enquiry_record, dict) else None,
                 "quotation_id": quote_record.get("id") if quote_record else None,
                 "quotation_reference": quote_record.get("reference_id") if quote_record else None
             }), 200
@@ -123,11 +138,32 @@ def record_quotation_click():
             'whatsapp_url': data.get('whatsapp_url') or ''
         }
         record = QuotationModel.create(quote_payload)
+
+        # Also create a copy in enquiries section so admin sees it in both places
+        enquiry_record = None
+        try:
+            enquiry_payload = {
+                'customer_name': quote_payload['customer_name'],
+                'mobile_number': quote_payload['mobile_number'],
+                'city': quote_payload['city'],
+                'product_name': quote_payload['product_name'],
+                'product_sku': quote_payload['product_sku'],
+                'message': quote_payload['message'],
+                'preferred_contact': 'WhatsApp Message',
+                'type': 'direct_whatsapp',
+                'whatsapp_url': quote_payload['whatsapp_url'],
+                'status': 'New'
+            }
+            enquiry_record = EnquiryService.create_enquiry(enquiry_payload)
+        except Exception as enq_err:
+            print(f"⚠️ Enquiry click sync notice: {enq_err}")
+
         return jsonify({
             'ok': True,
             'success': True,
             'quotation_id': record['id'] if record else None,
-            'quotation_reference': record['reference_id'] if record else None
+            'quotation_reference': record['reference_id'] if record else None,
+            'enquiry_id': enquiry_record.get('id') if isinstance(enquiry_record, dict) else None
         }), 200
     except Exception as e:
         return jsonify({'ok': False, 'success': False, 'error': str(e)}), 500

@@ -162,6 +162,56 @@ class GithubStorageService:
             return False, err_msg
 
     @classmethod
+    def save_json_file(cls, rel_path, data, commit_message):
+        """
+        Saves any JSON data to local disk and commits to GitHub if configured.
+        """
+        local_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), rel_path)
+        try:
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
+            with open(local_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            print(f"ℹ️ Local disk save notice for {rel_path}: {e}")
+
+        token, repo, branch = cls._get_config()
+        if not cls.is_configured():
+            return True, "Saved locally"
+
+        try:
+            url = f"https://api.github.com/repos/{repo}/contents/{rel_path}"
+            headers = {
+                'Authorization': f'Bearer {token}',
+                'Accept': 'application/vnd.github.v3+json',
+                'User-Agent': 'Sathik-Vercel-App'
+            }
+
+            sha = None
+            get_resp = requests.get(f"{url}?ref={branch}", headers=headers, timeout=6)
+            if get_resp.status_code == 200:
+                sha = get_resp.json().get('sha')
+
+            content_str = json.dumps(data, indent=2, ensure_ascii=False)
+            content_b64 = base64.b64encode(content_str.encode('utf-8')).decode('utf-8')
+
+            payload = {
+                "message": commit_message,
+                "content": content_b64,
+                "branch": branch
+            }
+            if sha:
+                payload["sha"] = sha
+
+            put_resp = requests.put(url, headers=headers, json=payload, timeout=10)
+            if put_resp.status_code in (200, 201):
+                print(f"✅ {rel_path} committed to GitHub repo {repo} ({branch})")
+                return True, "Committed to GitHub"
+            else:
+                return False, f"GitHub commit failed ({put_resp.status_code})"
+        except Exception as e:
+            return False, str(e)
+
+    @classmethod
     def upload_image(cls, file_bytes, filename):
         """
         Commits an uploaded image to static/uploads/ in the GitHub repository,

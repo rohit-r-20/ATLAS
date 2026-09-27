@@ -3,10 +3,12 @@ import json
 import time
 from datetime import datetime, timezone
 from database.supabase import get_supabase
+from services.github_storage import GithubStorageService
 
 DATA_FILE_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'database', 'quotations_data.json')
 
 _LOCAL_QUOTATIONS = None
+_LOCAL_QUOTATIONS_MTIME = 0
 
 def format_record(record):
     """Ensure record has _id and id fields for template backward compatibility."""
@@ -66,16 +68,27 @@ def _load_local_quotations(force_reload=False):
     _LOCAL_QUOTATIONS_MTIME = mtime
     return _LOCAL_QUOTATIONS
 
-def _save_local_quotations():
-    global _LOCAL_QUOTATIONS
+def _save_local_quotations(commit_msg="update orders and quotations"):
+    global _LOCAL_QUOTATIONS, _LOCAL_QUOTATIONS_MTIME
     if _LOCAL_QUOTATIONS is None:
         return
     try:
         os.makedirs(os.path.dirname(DATA_FILE_PATH), exist_ok=True)
         with open(DATA_FILE_PATH, 'w', encoding='utf-8') as f:
             json.dump(_LOCAL_QUOTATIONS, f, indent=2, ensure_ascii=False)
+        _LOCAL_QUOTATIONS_MTIME = os.path.getmtime(DATA_FILE_PATH)
     except Exception as e:
         print(f"⚠️ Error saving quotations to {DATA_FILE_PATH}: {e}")
+
+    try:
+        if GithubStorageService.is_configured():
+            GithubStorageService.save_json_file(
+                'database/quotations_data.json',
+                _LOCAL_QUOTATIONS,
+                f"feat(orders): {commit_msg} [{len(_LOCAL_QUOTATIONS)} items]"
+            )
+    except Exception as gh_e:
+        print(f"⚠️ Notice syncing quotations to GitHub: {gh_e}")
 
 
 class QuotationService:

@@ -1,9 +1,40 @@
 {% extends 'base.html' %}
 
-{% block title %}Admin - Manage Enquiries | Sathik Groups{% endblock %}
+{% block title %}{% if current_view == 'recycle_bin' %}Recycle Bin - Enquiries{% else %}Admin - Manage Enquiries{% endif %} | Sathik Groups{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<style>
+  .enq-item-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 0.5rem 0.65rem;
+    margin-top: 0.4rem;
+    font-size: 0.78rem;
+  }
+  .enq-badge-cart {
+    background: #e0e7ff;
+    color: #3730a3;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .enq-badge-source {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 0.25rem;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -21,91 +52,281 @@
   </aside>
 
   <main class="admin-main">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-      <h1 style="font-size: 1.75rem;">Customer Enquiries &amp; Quotes</h1>
+    <!-- Header with Title & Contextual Action Buttons -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 style="font-size: 1.75rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+          {% if current_view == 'recycle_bin' %}
+            <span>🗑️ Enquiries Recycle Bin</span>
+          {% else %}
+            <span>📩 Customer Enquiries &amp; Quotes</span>
+          {% endif %}
+        </h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">
+          {% if current_view == 'recycle_bin' %}
+            Deleted enquiries are safely retained here. You can restore them back anytime or permanently erase them.
+          {% else %}
+            Real-time enquiries, product questions, and quote cart requests received through WhatsApp and web forms.
+          {% endif %}
+        </p>
+      </div>
       
-      <div style="display: flex; gap: 0.5rem;">
-        <a href="{{ url_for('admin.enquiries') }}" class="btn btn-sm {% if not current_status %}btn-secondary{% else %}btn-outline{% endif %}">All ({{ stats.total }})</a>
-        <a href="{{ url_for('admin.enquiries', status='new') }}" class="btn btn-sm {% if current_status == 'new' %}btn-secondary{% else %}btn-outline{% endif %}">New ({{ stats.new }})</a>
-        <a href="{{ url_for('admin.enquiries', status='responded') }}" class="btn btn-sm {% if current_status == 'responded' %}btn-secondary{% else %}btn-outline{% endif %}">Responded ({{ stats.responded }})</a>
+      <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+        {% if current_view == 'recycle_bin' %}
+          <a href="{{ url_for('admin.enquiries') }}" class="btn btn-outline" style="text-decoration:none; font-weight:600;">
+            ← Back to Active Enquiries
+          </a>
+          {% if enquiries and enquiries|length > 0 %}
+          <form action="{{ url_for('admin.empty_enquiries_recycle_bin') }}" method="POST" onsubmit="return confirm('⚠️ Are you sure you want to PERMANENTLY delete ALL items in the Enquiry Recycle Bin?\nThis action CANNOT be undone.');" style="display:inline;">
+            <button type="submit" class="btn btn-outline" style="color: #dc2626; border-color: #fca5a5; font-weight: 600;">
+              💥 Empty Recycle Bin
+            </button>
+          </form>
+          {% endif %}
+        {% else %}
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+            <a href="{{ url_for('admin.enquiries') }}" class="btn btn-sm {% if not current_status %}btn-secondary{% else %}btn-outline{% endif %}">All ({{ stats.total }})</a>
+            <a href="{{ url_for('admin.enquiries', status='new') }}" class="btn btn-sm {% if current_status == 'new' %}btn-secondary{% else %}btn-outline{% endif %}">New ({{ stats.new }})</a>
+            <a href="{{ url_for('admin.enquiries', status='read') }}" class="btn btn-sm {% if current_status == 'read' %}btn-secondary{% else %}btn-outline{% endif %}">Read ({{ stats.read }})</a>
+            <a href="{{ url_for('admin.enquiries', status='responded') }}" class="btn btn-sm {% if current_status == 'responded' %}btn-secondary{% else %}btn-outline{% endif %}">Responded ({{ stats.responded }})</a>
+            <a href="{{ url_for('admin.enquiries', status='closed') }}" class="btn btn-sm {% if current_status == 'closed' %}btn-secondary{% else %}btn-outline{% endif %}">Closed ({{ stats.closed }})</a>
+          </div>
+        {% endif %}
       </div>
     </div>
 
+    <!-- Active vs Recycle Bin Switcher Tabs -->
+    <div style="display: flex; gap: 0.6rem; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap;">
+      <a href="{{ url_for('admin.enquiries') }}" 
+         class="btn btn-sm {% if current_view != 'recycle_bin' %}btn-primary{% else %}btn-outline{% endif %}" 
+         style="display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 9999px; padding: 0.45rem 1.1rem; text-decoration: none; font-weight: 600;">
+        <span>📩 Active Enquiries</span>
+        <span style="background: {% if current_view != 'recycle_bin' %}rgba(255,255,255,0.25){% else %}#e2e8f0{% endif %}; color: {% if current_view != 'recycle_bin' %}#fff{% else %}#1e293b{% endif %}; padding: 0.1rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">
+          {{ stats.total }}
+        </span>
+      </a>
+      <a href="{{ url_for('admin.enquiries', view='recycle_bin') }}" 
+         class="btn btn-sm {% if current_view == 'recycle_bin' %}btn-primary{% else %}btn-outline{% endif %}" 
+         style="display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 9999px; padding: 0.45rem 1.1rem; text-decoration: none; font-weight: 600; {% if current_view == 'recycle_bin' %}background: #dc2626; border-color: #dc2626; color: #fff;{% else %}color: #dc2626; border-color: #fca5a5;{% endif %}">
+        <span>🗑️ Recycle Bin</span>
+        <span style="background: {% if current_view == 'recycle_bin' %}rgba(255,255,255,0.28){% else %}#fee2e2{% endif %}; color: {% if current_view == 'recycle_bin' %}#fff{% else %}#991b1b{% endif %}; padding: 0.1rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">
+          {{ recycle_bin_count }}
+        </span>
+      </a>
+    </div>
+
+    <!-- Search Bar -->
+    <div style="margin-bottom: 1.25rem;">
+      <form method="GET" action="{{ url_for('admin.enquiries') }}" style="display: flex; gap: 0.5rem; max-width: 500px;">
+        {% if current_view == 'recycle_bin' %}
+          <input type="hidden" name="view" value="recycle_bin">
+        {% endif %}
+        {% if current_status %}
+          <input type="hidden" name="status" value="{{ current_status }}">
+        {% endif %}
+        <input type="text" name="q" value="{{ search_query or '' }}" class="form-input" placeholder="Search by name, phone, city, or reference..." style="flex:1;">
+        <button type="submit" class="btn btn-secondary">🔍 Search</button>
+        {% if search_query %}
+          <a href="{{ url_for('admin.enquiries', view=current_view, status=current_status) }}" class="btn btn-outline" style="text-decoration:none;">Clear</a>
+        {% endif %}
+      </form>
+    </div>
+
+    <!-- Enquiries Table -->
     <div class="table-card">
       <table class="admin-table">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Name &amp; Company</th>
-            <th>Contact</th>
-            <th>Product / Message</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th style="width: 140px;">Reference &amp; Date</th>
+            <th style="width: 200px;">Customer Details</th>
+            <th>Items / Enquiry Content</th>
+            <th style="width: 130px;">Status</th>
+            <th style="width: 150px; text-align: right;">Action</th>
           </tr>
         </thead>
         <tbody>
-          {% if enquiries %}
+          {% if enquiries and enquiries|length > 0 %}
             {% for e in enquiries %}
-            <tr>
-              <td style="font-size: 0.75rem; color: var(--primary-500);">
-                {% if e.created_at %}
-                  {{ e.created_at[:16] if e.created_at is string else (e.created_at.strftime('%Y-%m-%d %H:%M') if hasattr(e.created_at, 'strftime') else e.created_at) }}
-                {% else %}
-                  -
+            <tr {% if current_view == 'recycle_bin' %}style="background: #fffafa;"{% endif %}>
+              <!-- Ref & Date -->
+              <td style="font-size: 0.8rem;">
+                <div style="font-weight: 700; color: var(--primary-700); font-family: monospace;">{{ e.enquiry_ref or e.reference_id or ('#ENQ-' ~ e.id[:6]) }}</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.2rem;">
+                  {% if e.created_at %}
+                    {{ e.created_at[:16]|replace('T', ' ') if e.created_at is string else (e.created_at.strftime('%Y-%m-%d %H:%M') if hasattr(e.created_at, 'strftime') else e.created_at) }}
+                  {% else %}
+                    -
+                  {% endif %}
+                </div>
+                {% if current_view == 'recycle_bin' and e.deleted_at %}
+                  <div style="font-size: 0.68rem; color: #dc2626; margin-top: 0.25rem;">
+                    Deleted: {{ e.deleted_at[:10] }}
+                  </div>
                 {% endif %}
               </td>
+
+              <!-- Customer Details -->
               <td>
-                <strong>{{ e.name or e.customer_name or 'Customer' }}</strong><br>
-                <span style="font-size: 0.75rem; color: var(--primary-500);">{{ e.company or e.address or 'Individual' }}</span>
-              </td>
-              <td style="font-size: 0.8125rem;">
-                <div>📞 {{ e.phone or e.mobile or 'N/A' }}</div>
-                {% if e.phone or e.mobile %}
-                  {% set raw_num = (e.phone or e.mobile)|replace(' ', '')|replace('+', '')|replace('-', '') %}
-                  {% set wa_num = ('91' ~ raw_num) if raw_num|length == 10 else raw_num %}
-                  <a href="https://wa.me/{{ wa_num }}?text={{ ('Hello ' ~ (e.name or e.customer_name or 'there') ~ ', thank you for contacting Sathik Traders regarding ' ~ (e.product_name or 'your quote request') ~ '. We are here to assist you.')|urlencode }}" 
-                     target="_blank" 
-                     rel="noopener noreferrer" 
-                     style="background: #25D366; color: #ffffff; font-size: 0.72rem; padding: 0.25rem 0.6rem; display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.35rem; text-decoration: none; border-radius: 4px; font-weight: 700;">
-                    💬 WhatsApp Reply
-                  </a>
-                {% endif %}
+                <div style="font-weight: 700; color: #1e293b; font-size: 0.92rem;">
+                  {{ e.name or e.customer_name or 'Customer' }}
+                </div>
+                <div style="font-size: 0.78rem; color: #64748b; margin-top: 0.15rem;">
+                  📍 {{ e.city or e.address or 'Location not specified' }}
+                </div>
+                <div style="margin-top: 0.35rem; font-size: 0.82rem;">
+                  {% if e.phone or e.mobile or e.mobile_number %}
+                    {% set phone_val = e.phone or e.mobile or e.mobile_number %}
+                    <div>📞 <strong>{{ phone_val }}</strong></div>
+                    {% set raw_num = phone_val|replace(' ', '')|replace('+', '')|replace('-', '') %}
+                    {% set wa_num = ('91' ~ raw_num) if raw_num|length == 10 else raw_num %}
+                    <a href="https://wa.me/{{ wa_num }}?text={{ ('Hello ' ~ (e.name or e.customer_name or 'there') ~ ', thank you for contacting Sathik Groups regarding your inquiry. We are here to assist you.')|urlencode }}" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       style="background: #25D366; color: #ffffff; font-size: 0.72rem; padding: 0.25rem 0.55rem; display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.3rem; text-decoration: none; border-radius: 4px; font-weight: 700;">
+                      💬 WhatsApp Reply
+                    </a>
+                  {% else %}
+                    <span style="color: var(--text-muted); font-size: 0.75rem;">No phone provided</span>
+                  {% endif %}
+                </div>
                 {% if e.email %}
-                  <div style="margin-top: 0.25rem; font-size: 0.75rem; color: var(--primary-500);">✉️ {{ e.email }}</div>
+                  <div style="margin-top: 0.25rem; font-size: 0.75rem; color: #64748b;">✉️ {{ e.email }}</div>
                 {% endif %}
               </td>
+
+              <!-- Items & Enquiry Content -->
               <td>
-                {% if e.product_name %}
-                  <strong style="color: var(--accent);">{{ e.product_name }}</strong>
-                  {% if e.product_sku %}<span style="font-size:0.75rem; color:var(--primary-500);">(SKU: {{ e.product_sku }})</span>{% endif %}<br>
+                {% set cart_list = e.cart_items or (e['items'] if 'items' in e and e['items'] is sequence and e['items'] is not string else []) %}
+                {% if cart_list and cart_list|length > 0 %}
+                  <div>
+                    <span class="enq-badge-cart">
+                      🛒 Quote Cart ({{ cart_list|length }} item{{ 's' if cart_list|length > 1 else '' }})
+                    </span>
+                  </div>
+                  <div class="enq-item-box">
+                    <ul style="margin: 0; padding-left: 1.1rem; line-height: 1.45;">
+                      {% for it in cart_list %}
+                        <li>
+                          <strong>{{ it.name }}</strong>
+                          {% if it.sku %}<span style="color: #64748b; font-family: monospace;">({{ it.sku }})</span>{% endif %}
+                          {% if it.quantity and it.quantity != 1 %}&times; {{ it.quantity }}{% endif %}
+                          {% if it.brand %}<span style="color: #0284c7; font-size: 0.72rem; margin-left: 0.25rem;">[{{ it.brand }}]</span>{% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% elif e.product_name and e.product_name != 'Multiple Products Quote List' %}
+                  <div>
+                    <strong style="color: var(--accent); font-size: 0.92rem;">{{ e.product_name }}</strong>
+                    {% if e.product_sku %}<span style="font-size:0.75rem; color:var(--text-muted); font-family: monospace;">(SKU: {{ e.product_sku }})</span>{% endif %}
+                  </div>
                 {% endif %}
-                <span style="font-size: 0.8125rem; color: var(--primary-600); white-space: pre-line;">{{ e.message or 'No specific notes' }}</span>
+
+                {% if e.message %}
+                  <div style="margin-top: 0.35rem; font-size: 0.8125rem; color: #334155; line-height: 1.4; background: #fff; border-left: 3px solid #cbd5e1; padding: 0.3rem 0.6rem; border-radius: 0 4px 4px 0; white-space: pre-line;">{{ e.message }}</div>
+                {% endif %}
+
+                <div>
+                  {% if e.type == 'quote_list' or (cart_list and cart_list|length > 0) %}
+                    <span class="enq-badge-source">🛒 Quote Cart WhatsApp</span>
+                  {% elif e.type == 'direct_whatsapp' %}
+                    <span class="enq-badge-source" style="background: #dcfce7; color: #166534;">💬 Direct WhatsApp Click</span>
+                  {% elif e.preferred_contact %}
+                    <span class="enq-badge-source">{{ e.preferred_contact }}</span>
+                  {% endif %}
+                  {% if e.interested_in %}
+                    <span class="enq-badge-source">{{ e.interested_in }}</span>
+                  {% endif %}
+                </div>
               </td>
+
+              <!-- Status -->
               <td>
-                <span class="badge {% if e.status == 'new' %}badge-new{% elif e.status == 'responded' %}badge-featured{% else %}badge{% endif %}">
-                  {{ e.status }}
-                </span>
+                {% if current_view == 'recycle_bin' %}
+                  <span class="badge" style="background: #fee2e2; color: #991b1b; font-weight: 700;">
+                    🗑️ In Trash
+                  </span>
+                {% else %}
+                  <form action="{{ url_for('admin.update_enquiry_status', enquiry_id=e.id or e._id) }}" method="POST" style="margin-bottom: 0.35rem;">
+                    <select name="status" class="form-select" style="padding: 0.25rem 0.4rem; font-size: 0.78rem; font-weight: 600;" onchange="this.form.submit()">
+                      <option value="New" {% if e.status|lower == 'new' %}selected{% endif %}>🟢 New</option>
+                      <option value="Read" {% if e.status|lower == 'read' %}selected{% endif %}>👀 Read</option>
+                      <option value="Responded" {% if e.status|lower == 'responded' %}selected{% endif %}>💬 Responded</option>
+                      <option value="Closed" {% if e.status|lower == 'closed' %}selected{% endif %}>✅ Closed</option>
+                    </select>
+                  </form>
+                  <span class="badge {% if e.status|lower == 'new' %}badge-new{% elif e.status|lower == 'responded' %}badge-featured{% else %}badge{% endif %}" style="font-size: 0.7rem;">
+                    {{ e.status or 'New' }}
+                  </span>
+                {% endif %}
               </td>
-              <td>
-                <form action="{{ url_for('admin.update_enquiry_status', enquiry_id=e._id) }}" method="POST" style="display: flex; gap: 0.25rem;">
-                  <select name="status" class="form-select" style="padding: 0.25rem; font-size: 0.75rem;" onchange="this.form.submit()">
-                    <option value="new" {% if e.status == 'new' %}selected{% endif %}>New</option>
-                    <option value="read" {% if e.status == 'read' %}selected{% endif %}>Read</option>
-                    <option value="responded" {% if e.status == 'responded' %}selected{% endif %}>Responded</option>
-                    <option value="closed" {% if e.status == 'closed' %}selected{% endif %}>Closed</option>
-                  </select>
-                </form>
+
+              <!-- Actions -->
+              <td style="text-align: right; white-space: nowrap;">
+                {% if current_view == 'recycle_bin' %}
+                  <div style="display: inline-flex; gap: 0.4rem; align-items: center;">
+                    <!-- Restore Action -->
+                    <form action="{{ url_for('admin.restore_enquiry', enquiry_id=e.id or e._id) }}" method="POST" style="display: inline;">
+                      <button type="submit" class="btn btn-sm" style="background: #16a34a; color: #fff; border: none; padding: 0.35rem 0.65rem; font-size: 0.78rem; border-radius: 5px; display: inline-flex; align-items: center; gap: 0.25rem; font-weight: 600; cursor: pointer;" title="Restore to active enquiries">
+                        🔄 Restore
+                      </button>
+                    </form>
+                    <!-- Permanent Delete Action -->
+                    <form action="{{ url_for('admin.permanent_delete_enquiry', enquiry_id=e.id or e._id) }}" method="POST" onsubmit="return confirm('PERMANENTLY delete enquiry from \'{{ (e.name or e.customer_name or 'Customer')|escape }}\'?\nThis action CANNOT be undone.');" style="display: inline;">
+                      <button type="submit" class="btn btn-sm btn-outline" style="color: #dc2626; border-color: #fca5a5; padding: 0.35rem 0.65rem; font-size: 0.78rem; border-radius: 5px; display: inline-flex; align-items: center; gap: 0.25rem; font-weight: 600;" title="Permanently delete from database">
+                        💥 Erase
+                      </button>
+                    </form>
+                  </div>
+                {% else %}
+                  <div style="display: inline-flex; gap: 0.35rem; align-items: center;">
+                    <!-- Move to Recycle Bin (Soft Delete) -->
+                    <form action="{{ url_for('admin.delete_enquiry', enquiry_id=e.id or e._id) }}" method="POST" onsubmit="return confirm('Move enquiry from \'{{ (e.name or e.customer_name or 'Customer')|escape }}\' to Recycle Bin?\nYou can restore it anytime from the Recycle Bin tab.');" style="display: inline;">
+                      <button type="submit" class="btn btn-sm btn-outline" style="color: #dc2626; border-color: #fca5a5; padding: 0.35rem 0.65rem; font-size: 0.78rem; border-radius: 5px; display: inline-flex; align-items: center; gap: 0.25rem; font-weight: 600;" title="Move to Recycle Bin">
+                        🗑️ Delete
+                      </button>
+                    </form>
+                  </div>
+                {% endif %}
               </td>
             </tr>
             {% endfor %}
           {% else %}
             <tr>
-              <td colspan="6" style="text-align: center; color: var(--primary-500); padding: 3rem;">No customer enquiries matching current filter.</td>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 4rem 1.5rem;">
+                {% if current_view == 'recycle_bin' %}
+                  <div style="font-size: 3rem; margin-bottom: 0.75rem;">🗑️</div>
+                  <div style="font-weight: 700; font-size: 1.15rem; color: #1e293b; margin-bottom: 0.35rem;">Recycle Bin is Empty</div>
+                  <p style="color: #64748b; font-size: 0.875rem; margin: 0;">No deleted enquiries found. Deleted items will be preserved here for restoration.</p>
+                {% else %}
+                  <div style="font-size: 3rem; margin-bottom: 0.75rem;">📭</div>
+                  <div style="font-weight: 700; font-size: 1.15rem; color: #1e293b; margin-bottom: 0.35rem;">No Enquiries Found</div>
+                  <p style="color: #64748b; font-size: 0.875rem; margin: 0;">{% if current_status or search_query %}No enquiries matched your filter or search query.{% else %}When customers request quotes or send cart items via WhatsApp, they will appear here automatically.{% endif %}</p>
+                {% endif %}
+              </td>
             </tr>
           {% endif %}
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination -->
+    {% if total_pages > 1 %}
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div style="font-size: 0.85rem; color: #64748b;">
+        Showing page <strong>{{ page }}</strong> of <strong>{{ total_pages }}</strong> (Total: {{ total_enquiries }})
+      </div>
+      <div style="display: flex; gap: 0.35rem;">
+        {% if page > 1 %}
+          <a href="{{ url_for('admin.enquiries', page=page-1, view=current_view, status=current_status, q=search_query) }}" class="btn btn-sm btn-outline">← Prev</a>
+        {% endif %}
+        <span class="btn btn-sm btn-primary" style="pointer-events: none;">{{ page }}</span>
+        {% if page < total_pages %}
+          <a href="{{ url_for('admin.enquiries', page=page+1, view=current_view, status=current_status, q=search_query) }}" class="btn btn-sm btn-outline">Next →</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
   </main>
 </div>
 {% endblock %}
