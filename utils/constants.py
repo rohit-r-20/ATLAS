@@ -119,6 +119,8 @@ COMPANY_INFO = {
     'state': 'Tamil Nadu',
     'pincode': '600 052',
     'website': 'www.sathikgroups.com',
+    'instagram': 'https://www.instagram.com/sathikgroups.1964?stkn=MWlzaTR1Yzd1aWQ1eA==',
+    'instagram_handle': 'sathikgroups.1964',
     'hours': 'Mon – Sat, 9:00 AM – 7:30 PM'
 }
 
