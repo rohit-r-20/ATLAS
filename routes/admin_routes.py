@@ -412,8 +412,137 @@ def reorder_products():
 @admin_bp.route('/brands')
 @admin_required
 def brands():
-    brands_list = BrandModel.find_all()
-    return render_template('admin/brands.html', brands=brands_list, businesses=BUSINESSES)
+    search_query = request.args.get('q', '').strip()
+    business_filter = request.args.get('business', '').strip()
+    featured_filter = request.args.get('featured', '').strip()
+
+    featured_only = (featured_filter == '1' or featured_filter.lower() == 'true')
+    brands_list = BrandModel.find_all(
+        featured_only=featured_only,
+        business_slug=business_filter or None,
+        search=search_query or None,
+        is_active_only=False
+    )
+    all_brands = BrandModel.find_all(is_active_only=False)
+    featured_count = sum(1 for b in all_brands if b.get('featured'))
+
+    return render_template(
+        'admin/brands.html',
+        brands=brands_list,
+        total_brands=len(all_brands),
+        featured_count=featured_count,
+        businesses=[b for b in BUSINESSES if b['slug'] != 'catalogue'],
+        search_query=search_query,
+        current_business=business_filter,
+        current_featured=featured_filter
+    )
+
+@admin_bp.route('/brands/create', methods=['POST'])
+@admin_required
+def create_brand():
+    try:
+        data = request.form.to_dict()
+        name = data.get('name', '').strip()
+        if not name:
+            flash('Brand Name is required.', 'danger')
+            return redirect(url_for('admin.brands'))
+
+        slug = data.get('slug', '').strip() or generate_slug(name)
+        businesses = request.form.getlist('businesses[]') or request.form.getlist('businesses')
+        if not businesses:
+            businesses = [data.get('business_slug', 'hardware')]
+
+        logo_url = data.get('logo_url', '').strip()
+        if 'logo' in request.files and request.files['logo'].filename:
+            file = request.files['logo']
+            ok, res = save_uploaded_image(file, current_app.config['UPLOAD_FOLDER'], current_app.config['ALLOWED_EXTENSIONS'])
+            if ok:
+                logo_url = res
+
+        brand_data = {
+            'name': name,
+            'slug': slug,
+            'businesses': businesses,
+            'country': data.get('country', 'India').strip() or 'India',
+            'featured': 'featured' in request.form,
+            'logo': logo_url or f"/static/images/brands/{slug}.png",
+            'description': data.get('description', '').strip(),
+            'website': data.get('website', '').strip(),
+            'is_active': True
+        }
+
+        created_slug = BrandModel.create(brand_data)
+        if created_slug:
+            flash(f'Brand "{name}" created successfully!', 'success')
+        else:
+            flash(f'Failed to create brand "{name}".', 'danger')
+
+        return redirect(url_for('admin.brands'))
+    except Exception as e:
+        current_app.logger.error(f"Error creating brand: {e}", exc_info=True)
+        flash(f'Error creating brand: {e}', 'danger')
+        return redirect(url_for('admin.brands'))
+
+@admin_bp.route('/brands/<brand_id>/edit', methods=['POST'])
+@admin_required
+def edit_brand(brand_id):
+    try:
+        data = request.form.to_dict()
+        name = data.get('name', '').strip()
+        if not name:
+            flash('Brand Name is required.', 'danger')
+            return redirect(url_for('admin.brands'))
+
+        slug = data.get('slug', '').strip() or generate_slug(name)
+        businesses = request.form.getlist('businesses[]') or request.form.getlist('businesses')
+        if not businesses:
+            businesses = [data.get('business_slug', 'hardware')]
+
+        logo_url = data.get('logo_url', '').strip()
+        if 'logo' in request.files and request.files['logo'].filename:
+            file = request.files['logo']
+            ok, res = save_uploaded_image(file, current_app.config['UPLOAD_FOLDER'], current_app.config['ALLOWED_EXTENSIONS'])
+            if ok:
+                logo_url = res
+
+        update_payload = {
+            'name': name,
+            'slug': slug,
+            'businesses': businesses,
+            'country': data.get('country', 'India').strip() or 'India',
+            'featured': 'featured' in request.form,
+            'description': data.get('description', '').strip(),
+            'website': data.get('website', '').strip(),
+            'is_active': 'is_active' in request.form
+        }
+        if logo_url:
+            update_payload['logo'] = logo_url
+
+        success = BrandModel.update(brand_id, update_payload)
+        if success:
+            flash(f'Brand "{name}" updated successfully!', 'success')
+        else:
+            flash(f'Failed to update brand.', 'danger')
+        return redirect(url_for('admin.brands'))
+    except Exception as e:
+        current_app.logger.error(f"Error updating brand: {e}", exc_info=True)
+        flash(f'Error updating brand: {e}', 'danger')
+        return redirect(url_for('admin.brands'))
+
+@admin_bp.route('/brands/<brand_id>/delete', methods=['POST'])
+@admin_required
+def delete_brand(brand_id):
+    try:
+        success = BrandModel.delete(brand_id)
+        if success:
+            flash('Brand removed successfully.', 'success')
+        else:
+            flash('Failed to delete brand.', 'danger')
+        return redirect(url_for('admin.brands'))
+    except Exception as e:
+        current_app.logger.error(f"Error deleting brand: {e}", exc_info=True)
+        flash(f'Error deleting brand: {e}', 'danger')
+        return redirect(url_for('admin.brands'))
 
 @admin_bp.route('/enquiries')
 @admin_required
@@ -433,6 +562,7 @@ def update_enquiry_status(enquiry_id):
     flash('Enquiry status updated.', 'success')
     return redirect(url_for('admin.enquiries'))
 
+@admin_bp.route('/orders')
 @admin_bp.route('/quotations')
 @admin_required
 def quotations():
@@ -461,6 +591,7 @@ def quotations():
         total_quotes=total
     )
 
+@admin_bp.route('/orders/<quote_id>/status', methods=['POST'])
 @admin_bp.route('/quotations/<quote_id>/status', methods=['POST'])
 @admin_required
 def update_quotation_status(quote_id):
@@ -476,9 +607,78 @@ def update_quotation_status(quote_id):
     if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return jsonify({'success': bool(success), 'status': status, 'notes': notes}), 200
 
-    flash('Quotation status updated successfully.', 'success')
+    flash('Order status updated successfully.', 'success')
     return redirect(url_for('admin.quotations', status=request.args.get('current_status', '')))
 
+@admin_bp.route('/orders/<quote_id>/edit', methods=['POST'])
+@admin_bp.route('/quotations/<quote_id>/edit', methods=['POST'])
+@admin_required
+def edit_quotation(quote_id):
+    try:
+        if request.is_json:
+            data = request.get_json() or {}
+        else:
+            data = request.form.to_dict()
+
+        items = []
+        raw_items = data.get('items')
+        raw_items_json = data.get('items_json')
+        if raw_items_json:
+            try:
+                items = json.loads(raw_items_json) if isinstance(raw_items_json, str) else raw_items_json
+            except Exception:
+                pass
+        elif isinstance(raw_items, list):
+            items = raw_items
+        elif request.form.getlist('item_name[]'):
+            names = request.form.getlist('item_name[]')
+            skus = request.form.getlist('item_sku[]')
+            qtys = request.form.getlist('item_qty[]')
+            brands = request.form.getlist('item_brand[]')
+            prices = request.form.getlist('item_price[]')
+            for idx in range(len(names)):
+                n = names[idx].strip()
+                if n:
+                    items.append({
+                        'name': n,
+                        'sku': skus[idx].strip().upper() if idx < len(skus) else '',
+                        'quantity': qtys[idx].strip() if idx < len(qtys) else '1',
+                        'brand': brands[idx].strip() if idx < len(brands) else '',
+                        'price': prices[idx].strip() if idx < len(prices) else ''
+                    })
+
+        update_data = {
+            'customer_name': data.get('customer_name', '').strip(),
+            'mobile_number': data.get('mobile_number', '').strip(),
+            'email': data.get('email', '').strip(),
+            'city': data.get('city', '').strip(),
+            'status': data.get('status', 'New'),
+            'admin_notes': data.get('admin_notes', data.get('notes', '')).strip(),
+            'message': data.get('message', '').strip(),
+            'total_amount': data.get('total_amount', '').strip(),
+        }
+        if items:
+            update_data['items'] = items
+
+        success = QuotationModel.update(quote_id, update_data)
+
+        if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({'success': bool(success), 'data': update_data}), 200
+
+        if success:
+            flash('Order / Quotation updated successfully.', 'success')
+        else:
+            flash('Failed to update order.', 'danger')
+
+        return redirect(url_for('admin.quotations', status=request.args.get('current_status', '')))
+    except Exception as e:
+        current_app.logger.error(f"Error editing quotation {quote_id}: {e}", exc_info=True)
+        if request.is_json:
+            return jsonify({'success': False, 'error': str(e)}), 500
+        flash(f'Error updating order: {e}', 'danger')
+        return redirect(url_for('admin.quotations'))
+
+@admin_bp.route('/orders/<quote_id>/delete', methods=['POST'])
 @admin_bp.route('/quotations/<quote_id>/delete', methods=['POST'])
 @admin_required
 def delete_quotation(quote_id):
@@ -486,7 +686,7 @@ def delete_quotation(quote_id):
     if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return jsonify({'success': bool(success)}), 200
 
-    flash('Quotation deleted successfully.', 'success')
+    flash('Order / Quotation deleted successfully.', 'success')
     return redirect(url_for('admin.quotations'))
 
 @admin_bp.route('/settings', methods=['GET', 'POST'])

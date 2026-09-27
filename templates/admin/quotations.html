@@ -62,7 +62,7 @@
       <li><a href="{{ url_for('admin.dashboard') }}">📊 Dashboard</a></li>
       <li><a href="{{ url_for('admin.products') }}">📦 Products</a></li>
       <li><a href="{{ url_for('admin.brands') }}">🏷️ Brands</a></li>
-      <li><a href="{{ url_for('admin.quotations') }}" class="active">📝 Quotations</a></li>
+      <li><a href="{{ url_for('admin.quotations') }}" class="active">📝 Orders &amp; Quotes</a></li>
       <li><a href="{{ url_for('admin.enquiries') }}">📩 Enquiries</a></li>
       <li><a href="{{ url_for('admin.settings') }}">⚙️ Settings</a></li>
     </ul>
@@ -72,9 +72,9 @@
     <!-- Header -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
       <div>
-        <h1 style="font-size: 1.75rem; margin-bottom: 0.25rem;">Customer Quotations</h1>
+        <h1 style="font-size: 1.75rem; margin-bottom: 0.25rem;">Orders &amp; Customer Quotes</h1>
         <p style="color: var(--primary-500); font-size: 0.875rem; margin: 0;">
-          All quote requests submitted via website quote lists, product modals, and WhatsApp handoffs.
+          Manage customer orders, quote requests, line items, pricing, notes, and statuses.
         </p>
       </div>
 
@@ -230,12 +230,15 @@
 
               <!-- Actions -->
               <td style="text-align: right;">
-                <div style="display: flex; gap: 0.4rem; justify-content: flex-end;">
+                <div style="display: flex; gap: 0.35rem; justify-content: flex-end;">
                   <button type="button" class="btn btn-sm btn-outline" onclick='viewQuoteDetails({{ q|tojson|safe }})' style="font-size: 0.75rem; padding: 0.3rem 0.55rem;" title="View Full Details">
                     👁️ View
                   </button>
-                  <form action="{{ url_for('admin.delete_quotation', quote_id=q._id or q.id) }}" method="POST" onsubmit="return confirm('Delete this quotation record permanently?');" style="display: inline;">
-                    <button type="submit" class="btn btn-sm btn-outline" style="color: #dc2626; border-color: #fca5a5; font-size: 0.75rem; padding: 0.3rem 0.55rem;" title="Delete Quotation">
+                  <button type="button" class="btn btn-sm btn-primary" onclick='openEditOrderModal({{ q|tojson|safe }})' style="font-size: 0.75rem; padding: 0.3rem 0.55rem;" title="Edit Order Details">
+                    ✏️ Edit
+                  </button>
+                  <form action="{{ url_for('admin.delete_quotation', quote_id=q._id or q.id) }}" method="POST" onsubmit="return confirm('Delete this order/quotation permanently?');" style="display: inline;">
+                    <button type="submit" class="btn btn-sm btn-outline" style="color: #dc2626; border-color: #fca5a5; font-size: 0.75rem; padding: 0.3rem 0.55rem;" title="Delete Order">
                       🗑️
                     </button>
                   </form>
@@ -332,18 +335,124 @@
         </div>
         <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
           <button type="button" class="btn btn-outline" onclick="closeModal('quote-details-modal')">Close</button>
+          <button type="button" class="btn btn-secondary" onclick="switchToEditOrderModal()" style="display: inline-flex; align-items: center; gap: 0.35rem;">✏️ Edit Full Order</button>
           <button type="submit" class="btn btn-primary">Save Changes</button>
         </div>
       </form>
     </div>
   </div>
 </div>
+
+<!-- ============================================================
+     EDIT ORDER / QUOTATION MODAL
+     ============================================================ -->
+<div id="edit-order-modal" class="modal-backdrop">
+  <div class="modal-card" style="max-width: 720px; max-height: 90vh; overflow-y: auto;">
+    <div class="modal-header">
+      <div>
+        <h3 id="edit-modal-title" style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0;">✏️ Edit Order / Quotation</h3>
+        <div id="edit-modal-ref" style="font-size: 0.75rem; color: #64748b; margin-top: 0.2rem;"></div>
+      </div>
+      <button type="button" onclick="closeModal('edit-order-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+    </div>
+    <form id="edit-order-form" action="" method="POST">
+      <div class="modal-body">
+        <!-- Customer Details -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem;">
+          <h4 style="font-size: 0.85rem; font-weight: 700; color: #334155; text-transform: uppercase; margin: 0 0 0.75rem 0;">👤 Customer Information</h4>
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label">Customer Name *</label>
+              <input type="text" name="customer_name" id="edit-cust-name" class="form-input" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 0.75rem;">
+              <label class="form-label">Mobile Number *</label>
+              <input type="text" name="mobile_number" id="edit-cust-phone" class="form-input" required>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">City / Delivery Address</label>
+              <input type="text" name="city" id="edit-cust-city" class="form-input" placeholder="e.g. Red Hills, Chennai">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Email Address (Optional)</label>
+              <input type="email" name="email" id="edit-cust-email" class="form-input" placeholder="customer@example.com">
+            </div>
+          </div>
+        </div>
+
+        <!-- Status & Pricing -->
+        <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem;">
+          <h4 style="font-size: 0.85rem; font-weight: 700; color: #334155; text-transform: uppercase; margin: 0 0 0.75rem 0;">⚙️ Order Status &amp; Value</h4>
+          <div class="form-row-2">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Order Status</label>
+              <select name="status" id="edit-order-status" class="form-select">
+                <option value="New">🟢 New</option>
+                <option value="Contacted">🔵 Contacted</option>
+                <option value="Quoted">🟡 Quoted</option>
+                <option value="In Progress">🟣 In Progress</option>
+                <option value="Closed">⚪ Closed / Fulfilled</option>
+                <option value="Cancelled">🔴 Cancelled</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Total Quoted Value / Amount (₹)</label>
+              <input type="text" name="total_amount" id="edit-order-total" class="form-input" placeholder="e.g. ₹45,000 or negotiable">
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Items Editor -->
+        <div style="margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <h4 style="font-size: 0.85rem; font-weight: 700; color: #334155; text-transform: uppercase; margin: 0;">📦 Order Items</h4>
+            <button type="button" class="btn btn-sm btn-outline" onclick="addOrderItemRow()" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+              ➕ Add Item
+            </button>
+          </div>
+          <div id="edit-items-table-container" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.75rem;">
+            <div style="display: grid; grid-template-columns: 3fr 1.5fr 1fr 1fr 40px; gap: 0.5rem; font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 0.4rem; padding-bottom: 0.3rem; border-bottom: 1px solid #e2e8f0;">
+              <div>Item Name</div>
+              <div>SKU / Model</div>
+              <div>Qty</div>
+              <div>Price (₹)</div>
+              <div></div>
+            </div>
+            <div id="edit-items-rows-container" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <!-- Dynamic item rows injected here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Message & Internal Notes -->
+        <div class="form-group">
+          <label class="form-label">Customer Requirements / Note</label>
+          <textarea name="message" id="edit-order-message" class="form-textarea" style="min-height: 60px; font-size: 0.85rem;"></textarea>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Internal Admin Notes</label>
+          <textarea name="admin_notes" id="edit-order-notes" class="form-textarea" placeholder="Internal tracking, price quote details, delivery notes..." style="min-height: 60px; font-size: 0.85rem;"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0;">
+        <button type="button" class="btn btn-outline" onclick="closeModal('edit-order-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Order Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+  let currentActiveQuote = null;
+
   function viewQuoteDetails(quote) {
     if (!quote) return;
+    currentActiveQuote = quote;
 
     document.getElementById('modal-quote-ref').textContent = (quote.quote_ref || 'Quotation') + ' — ' + (quote.customer_name || quote.name || 'Customer');
     document.getElementById('modal-quote-date').textContent = 'Created: ' + (quote.created_at || 'Just now');
@@ -407,9 +516,67 @@
     const form = document.getElementById('modal-status-form');
     form.action = '/admin/quotations/' + (quote._id || quote.id) + '/status?current_status={{ current_status }}';
     document.getElementById('modal-status-select').value = quote.status || 'New';
-    document.getElementById('modal-notes-input').value = quote.notes || '';
+    document.getElementById('modal-notes-input').value = quote.notes || quote.admin_notes || '';
 
     openModal('quote-details-modal');
+  }
+
+  function switchToEditOrderModal() {
+    closeModal('quote-details-modal');
+    if (currentActiveQuote) {
+      openEditOrderModal(currentActiveQuote);
+    }
+  }
+
+  function openEditOrderModal(quote) {
+    if (!quote) return;
+    currentActiveQuote = quote;
+
+    const quoteId = quote._id || quote.id;
+    const form = document.getElementById('edit-order-form');
+    form.action = '/admin/orders/' + encodeURIComponent(quoteId) + '/edit?current_status={{ current_status }}';
+
+    document.getElementById('edit-modal-title').textContent = '✏️ Edit Order: ' + (quote.customer_name || quote.name || 'Customer');
+    document.getElementById('edit-modal-ref').textContent = (quote.quote_ref || ('#QT-' + quoteId)) + ' • Created: ' + (quote.created_at || 'Recent');
+
+    document.getElementById('edit-cust-name').value = quote.customer_name || quote.name || '';
+    document.getElementById('edit-cust-phone').value = quote.mobile_number || quote.phone || '';
+    document.getElementById('edit-cust-city').value = quote.city || quote.address || '';
+    document.getElementById('edit-cust-email').value = quote.email || '';
+    document.getElementById('edit-order-status').value = quote.status || 'New';
+    document.getElementById('edit-order-total').value = quote.total_amount || '';
+    document.getElementById('edit-order-message').value = quote.message || '';
+    document.getElementById('edit-order-notes').value = quote.admin_notes || quote.notes || '';
+
+    // Populate Items
+    const container = document.getElementById('edit-items-rows-container');
+    container.innerHTML = '';
+    const items = quote.items || [];
+    if (items.length > 0) {
+      items.forEach(it => {
+        addOrderItemRow(it.name, it.sku, it.quantity, it.brand, it.price);
+      });
+    } else if (quote.product_name) {
+      addOrderItemRow(quote.product_name, quote.product_sku, quote.quantity || 1, quote.brand || '', quote.price || '');
+    } else {
+      addOrderItemRow();
+    }
+
+    openModal('edit-order-modal');
+  }
+
+  function addOrderItemRow(name = '', sku = '', qty = '1', brand = '', price = '') {
+    const container = document.getElementById('edit-items-rows-container');
+    const row = document.createElement('div');
+    row.style.cssText = 'display: grid; grid-template-columns: 3fr 1.5fr 1fr 1fr 40px; gap: 0.5rem; align-items: center;';
+    row.innerHTML = `
+      <input type="text" name="item_name[]" class="form-input" style="padding: 0.35rem 0.5rem; font-size: 0.85rem;" placeholder="Item name" value="${escapeHtml(name)}" required>
+      <input type="text" name="item_sku[]" class="form-input" style="padding: 0.35rem 0.5rem; font-size: 0.85rem;" placeholder="SKU" value="${escapeHtml(sku)}">
+      <input type="text" name="item_qty[]" class="form-input" style="padding: 0.35rem 0.5rem; font-size: 0.85rem;" placeholder="Qty" value="${escapeHtml(String(qty || '1'))}">
+      <input type="text" name="item_price[]" class="form-input" style="padding: 0.35rem 0.5rem; font-size: 0.85rem;" placeholder="Price" value="${escapeHtml(String(price || ''))}">
+      <button type="button" onclick="this.parentElement.remove()" class="btn btn-sm btn-outline" style="color: #dc2626; border-color: #fca5a5; padding: 0.35rem 0.5rem; font-size: 0.8rem;" title="Remove row">🗑️</button>
+    `;
+    container.appendChild(row);
   }
 
   function escapeHtml(str) {

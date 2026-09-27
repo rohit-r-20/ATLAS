@@ -14,6 +14,14 @@ class QuotationModel:
         return QuotationService.get_by_id(quote_id)
 
     @classmethod
+    def update(cls, quote_id, data):
+        return QuotationService.update_quotation(quote_id, data)
+
+    @classmethod
+    def update_quotation(cls, quote_id, data):
+        return QuotationService.update_quotation(quote_id, data)
+
+    @classmethod
     def update_status(cls, quote_id, status, notes=None):
         return QuotationService.update_status(quote_id, status, notes=notes)
 

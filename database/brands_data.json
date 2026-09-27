@@ -1,0 +1,918 @@
+[
+  {
+    "name": "Asian Paints",
+    "slug": "asian-paints",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "asian-paints",
+    "_id": "asian-paints",
+    "is_active": true,
+    "order": 1,
+    "logo": "/static/images/brands/asian-paints.png"
+  },
+  {
+    "name": "Godrej Locks",
+    "slug": "godrej",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "godrej",
+    "_id": "godrej",
+    "is_active": true,
+    "order": 2,
+    "logo": "/static/images/brands/godrej.png"
+  },
+  {
+    "name": "MRF Paints",
+    "slug": "mrf-paints",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "mrf-paints",
+    "_id": "mrf-paints",
+    "is_active": true,
+    "order": 3,
+    "logo": "/static/images/brands/mrf-paints.png"
+  },
+  {
+    "name": "Yale Locks",
+    "slug": "yale",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "USA",
+    "id": "yale",
+    "_id": "yale",
+    "is_active": true,
+    "order": 4,
+    "logo": "/static/images/brands/yale.png"
+  },
+  {
+    "name": "Link Locks",
+    "slug": "link",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "link",
+    "_id": "link",
+    "is_active": true,
+    "order": 5,
+    "logo": "/static/images/brands/link.png"
+  },
+  {
+    "name": "Quba Hardware",
+    "slug": "quba",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "quba",
+    "_id": "quba",
+    "is_active": true,
+    "order": 6,
+    "logo": "/static/images/brands/quba.png"
+  },
+  {
+    "name": "Birla White Putty",
+    "slug": "birla-putty",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "birla-putty",
+    "_id": "birla-putty",
+    "is_active": true,
+    "order": 7,
+    "logo": "/static/images/brands/birla-putty.png"
+  },
+  {
+    "name": "Pidilite Fevicol",
+    "slug": "fevicol",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "fevicol",
+    "_id": "fevicol",
+    "is_active": true,
+    "order": 8,
+    "logo": "/static/images/brands/fevicol.png"
+  },
+  {
+    "name": "Dr. Fixit",
+    "slug": "dr-fixit",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "dr-fixit",
+    "_id": "dr-fixit",
+    "is_active": true,
+    "order": 9,
+    "logo": "/static/images/brands/dr-fixit.png"
+  },
+  {
+    "name": "Fosroc",
+    "slug": "fosroc",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "fosroc",
+    "_id": "fosroc",
+    "is_active": true,
+    "order": 10,
+    "logo": "/static/images/brands/fosroc.png"
+  },
+  {
+    "name": "Sheenlac",
+    "slug": "sheenlac",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "sheenlac",
+    "_id": "sheenlac",
+    "is_active": true,
+    "order": 11,
+    "logo": "/static/images/brands/sheenlac.png"
+  },
+  {
+    "name": "Jaquar",
+    "slug": "jaquar",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "jaquar",
+    "_id": "jaquar",
+    "is_active": true,
+    "order": 12,
+    "logo": "/static/images/brands/jaquar.png"
+  },
+  {
+    "name": "Hindware",
+    "slug": "hindware",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "hindware",
+    "_id": "hindware",
+    "is_active": true,
+    "order": 13,
+    "logo": "/static/images/brands/hindware.png"
+  },
+  {
+    "name": "C.R.I. Pumps",
+    "slug": "cri",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "cri",
+    "_id": "cri",
+    "is_active": true,
+    "order": 14,
+    "logo": "/static/images/brands/cri.png"
+  },
+  {
+    "name": "EKKI Water Tech",
+    "slug": "ekki",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "ekki",
+    "_id": "ekki",
+    "is_active": true,
+    "order": 15,
+    "logo": "/static/images/brands/ekki.png"
+  },
+  {
+    "name": "ÉSSCO Bath Fittings",
+    "slug": "eesco",
+    "businesses": [
+      "bath-kitchen",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "eesco",
+    "_id": "eesco",
+    "is_active": true,
+    "order": 16,
+    "logo": "/static/images/brands/eesco.png"
+  },
+  {
+    "name": "Parryware",
+    "slug": "parryware",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "parryware",
+    "_id": "parryware",
+    "is_active": true,
+    "order": 17,
+    "logo": "/static/images/brands/parryware.png"
+  },
+  {
+    "name": "Geberit",
+    "slug": "geberit",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "Switzerland",
+    "id": "geberit",
+    "_id": "geberit",
+    "is_active": true,
+    "order": 18,
+    "logo": "/static/images/brands/geberit.png"
+  },
+  {
+    "name": "Grohe",
+    "slug": "grohe",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "Germany",
+    "id": "grohe",
+    "_id": "grohe",
+    "is_active": true,
+    "order": 19,
+    "logo": "/static/images/brands/grohe.png"
+  },
+  {
+    "name": "Aqua Tech Tanks",
+    "slug": "aquatech",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "aquatech",
+    "_id": "aquatech",
+    "is_active": true,
+    "order": 20,
+    "logo": "/static/images/brands/aquatech.png"
+  },
+  {
+    "name": "Waterman",
+    "slug": "waterman",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "waterman",
+    "_id": "waterman",
+    "is_active": true,
+    "order": 21,
+    "logo": "/static/images/brands/waterman.png"
+  },
+  {
+    "name": "Waterstar",
+    "slug": "waterstar",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "waterstar",
+    "_id": "waterstar",
+    "is_active": true,
+    "order": 22,
+    "logo": "/static/images/brands/waterstar.png"
+  },
+  {
+    "name": "G-Bath",
+    "slug": "g-bath",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "g-bath",
+    "_id": "g-bath",
+    "is_active": true,
+    "order": 23,
+    "logo": "/static/images/brands/g-bath.png"
+  },
+  {
+    "name": "Germa",
+    "slug": "germa",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "germa",
+    "_id": "germa",
+    "is_active": true,
+    "order": 24,
+    "logo": "/static/images/brands/germa.png"
+  },
+  {
+    "name": "Kreesta",
+    "slug": "kreesta",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "kreesta",
+    "_id": "kreesta",
+    "is_active": true,
+    "order": 25,
+    "logo": "/static/images/brands/kreesta.png"
+  },
+  {
+    "name": "Benicio",
+    "slug": "benicio",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "benicio",
+    "_id": "benicio",
+    "is_active": true,
+    "order": 26,
+    "logo": "/static/images/brands/benicio.png"
+  },
+  {
+    "name": "Clayware",
+    "slug": "clayware",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "clayware",
+    "_id": "clayware",
+    "is_active": true,
+    "order": 27,
+    "logo": "/static/images/brands/clayware.png"
+  },
+  {
+    "name": "Rasi Electrodes",
+    "slug": "rasi",
+    "businesses": [
+      "plumbing",
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "rasi",
+    "_id": "rasi",
+    "is_active": true,
+    "order": 28,
+    "logo": "/static/images/brands/rasi.png"
+  },
+  {
+    "name": "Bestarc Welding",
+    "slug": "bestarc",
+    "businesses": [
+      "plumbing",
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "bestarc",
+    "_id": "bestarc",
+    "is_active": true,
+    "order": 29,
+    "logo": "/static/images/brands/bestarc.png"
+  },
+  {
+    "name": "Spac Pneumatics",
+    "slug": "spac",
+    "businesses": [
+      "plumbing",
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "spac",
+    "_id": "spac",
+    "is_active": true,
+    "order": 30,
+    "logo": "/static/images/brands/spac.png"
+  },
+  {
+    "name": "Janatics Pneumatic",
+    "slug": "janatics",
+    "businesses": [
+      "plumbing",
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "janatics",
+    "_id": "janatics",
+    "is_active": true,
+    "order": 31,
+    "logo": "/static/images/brands/janatics.png"
+  },
+  {
+    "name": "Anchor Roma",
+    "slug": "anchor-roma",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "anchor-roma",
+    "_id": "anchor-roma",
+    "is_active": true,
+    "order": 32,
+    "logo": "/static/images/brands/anchor-roma.png"
+  },
+  {
+    "name": "Oswin Pumps",
+    "slug": "oswin",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "oswin",
+    "_id": "oswin",
+    "is_active": true,
+    "order": 33,
+    "logo": "/static/images/brands/oswin.png"
+  },
+  {
+    "name": "Orbit Wires & Cables",
+    "slug": "orbit",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "orbit",
+    "_id": "orbit",
+    "is_active": true,
+    "order": 34,
+    "logo": "/static/images/brands/orbit.png"
+  },
+  {
+    "name": "Hello Switches",
+    "slug": "hello",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "hello",
+    "_id": "hello",
+    "is_active": true,
+    "order": 35,
+    "logo": "/static/images/brands/hello.png"
+  },
+  {
+    "name": "Legrand Electrical",
+    "slug": "legrand",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "France",
+    "id": "legrand",
+    "_id": "legrand",
+    "is_active": true,
+    "order": 36,
+    "logo": "/static/images/brands/legrand.png"
+  },
+  {
+    "name": "Niagara Valves & Fittings",
+    "slug": "niagara",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "niagara",
+    "_id": "niagara",
+    "is_active": true,
+    "order": 37,
+    "logo": "/static/images/brands/niagara.png"
+  },
+  {
+    "name": "Polymak Power Tools",
+    "slug": "polymac",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "polymac",
+    "_id": "polymac",
+    "is_active": true,
+    "order": 38,
+    "logo": "/static/images/brands/polymac.png"
+  },
+  {
+    "name": "Polyhose Industrial",
+    "slug": "polyhose",
+    "businesses": [
+      "plumbing",
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "polyhose",
+    "_id": "polyhose",
+    "is_active": true,
+    "order": 39,
+    "logo": "/static/images/brands/polyhose.png"
+  },
+  {
+    "name": "Bosch Power Tools",
+    "slug": "bosch",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "Germany",
+    "id": "bosch",
+    "_id": "bosch",
+    "is_active": true,
+    "order": 40,
+    "logo": "/static/images/brands/bosch.png"
+  },
+  {
+    "name": "DeWalt Industrial Tools",
+    "slug": "dewalt",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "USA",
+    "id": "dewalt",
+    "_id": "dewalt",
+    "is_active": true,
+    "order": 41,
+    "logo": "/static/images/brands/dewalt.png"
+  },
+  {
+    "name": "Ralliwolf Industrial",
+    "slug": "ralliwolf",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "ralliwolf",
+    "_id": "ralliwolf",
+    "is_active": true,
+    "order": 42,
+    "logo": "/static/images/brands/ralliwolf.png"
+  },
+  {
+    "name": "Ashirvad Pipes",
+    "slug": "ashirvad",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "ashirvad",
+    "_id": "ashirvad",
+    "is_active": true,
+    "order": 43,
+    "logo": "/static/images/brands/ashirvad.png"
+  },
+  {
+    "name": "Makita Power Tools",
+    "slug": "makita",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "Japan",
+    "id": "makita",
+    "_id": "makita",
+    "is_active": true,
+    "order": 44,
+    "logo": "/static/images/brands/makita.png"
+  },
+  {
+    "name": "Supron",
+    "slug": "supron",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "supron",
+    "_id": "supron",
+    "is_active": true,
+    "order": 45,
+    "logo": "/static/images/brands/supron.png"
+  },
+  {
+    "name": "Alpha",
+    "slug": "alpha",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "alpha",
+    "_id": "alpha",
+    "is_active": true,
+    "order": 46,
+    "logo": "/static/images/brands/alpha.png"
+  },
+  {
+    "name": "Taparia",
+    "slug": "taparia",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "taparia",
+    "_id": "taparia",
+    "is_active": true,
+    "order": 47,
+    "logo": "/static/images/brands/taparia.png"
+  },
+  {
+    "name": "GB Company",
+    "slug": "gb-company",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "gb-company",
+    "_id": "gb-company",
+    "is_active": true,
+    "order": 48,
+    "logo": "/static/images/brands/gb-company.png"
+  },
+  {
+    "name": "Roma",
+    "slug": "roma",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "roma",
+    "_id": "roma",
+    "is_active": true,
+    "order": 49,
+    "logo": "/static/images/brands/roma.png"
+  },
+  {
+    "name": "Finolex",
+    "slug": "finolex",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "finolex",
+    "_id": "finolex",
+    "is_active": true,
+    "order": 50,
+    "logo": "/static/images/brands/finolex.png"
+  },
+  {
+    "name": "Orca",
+    "slug": "orca",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "orca",
+    "_id": "orca",
+    "is_active": true,
+    "order": 51,
+    "logo": "/static/images/brands/orca.png"
+  },
+  {
+    "name": "M-Seal",
+    "slug": "m-seal",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "m-seal",
+    "_id": "m-seal",
+    "is_active": true,
+    "order": 52,
+    "logo": "/static/images/brands/m-seal.png"
+  },
+  {
+    "name": "Bondite",
+    "slug": "bondite",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "bondite",
+    "_id": "bondite",
+    "is_active": true,
+    "order": 53,
+    "logo": "/static/images/brands/bondite.png"
+  },
+  {
+    "name": "Indigo Paints",
+    "slug": "indigo",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "indigo",
+    "_id": "indigo",
+    "is_active": true,
+    "order": 54,
+    "logo": "/static/images/brands/indigo.png"
+  },
+  {
+    "name": "Vemo Tiles & Bathware",
+    "slug": "vemo",
+    "businesses": [
+      "bath-kitchen"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "vemo",
+    "_id": "vemo",
+    "is_active": true,
+    "order": 55,
+    "logo": "/static/images/brands/vemo.png"
+  },
+  {
+    "name": "K2 Chemicals",
+    "slug": "k2",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "k2",
+    "_id": "k2",
+    "is_active": true,
+    "order": 56,
+    "logo": "/static/images/brands/k2.png"
+  },
+  {
+    "name": "Sika",
+    "slug": "sika",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "Switzerland",
+    "id": "sika",
+    "_id": "sika",
+    "is_active": true,
+    "order": 57,
+    "logo": "/static/images/brands/sika.png"
+  },
+  {
+    "name": "CICO Technologies",
+    "slug": "cico",
+    "businesses": [
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "cico",
+    "_id": "cico",
+    "is_active": true,
+    "order": 58,
+    "logo": "/static/images/brands/cico.png"
+  },
+  {
+    "name": "Loctite",
+    "slug": "loctite",
+    "businesses": [
+      "hardware",
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "Germany",
+    "id": "loctite",
+    "_id": "loctite",
+    "is_active": true,
+    "order": 59,
+    "logo": "/static/images/brands/loctite.png"
+  },
+  {
+    "name": "VA Best Pumps",
+    "slug": "best-pumps",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "best-pumps",
+    "_id": "best-pumps",
+    "is_active": true,
+    "order": 60,
+    "logo": "/static/images/brands/best-pumps.png"
+  },
+  {
+    "name": "Lubi Pumps",
+    "slug": "lubi",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "lubi",
+    "_id": "lubi",
+    "is_active": true,
+    "order": 61,
+    "logo": "/static/images/brands/lubi.png"
+  },
+  {
+    "name": "Ramesh Pumps",
+    "slug": "ramesh",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "ramesh",
+    "_id": "ramesh",
+    "is_active": true,
+    "order": 62,
+    "logo": "/static/images/brands/ramesh.png"
+  },
+  {
+    "name": "Greenfos Pumps",
+    "slug": "greenfos",
+    "businesses": [
+      "plumbing"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "greenfos",
+    "_id": "greenfos",
+    "is_active": true,
+    "order": 63,
+    "logo": "/static/images/brands/greenfos.png"
+  },
+  {
+    "name": "V-Guard",
+    "slug": "v-guard",
+    "businesses": [
+      "plumbing",
+      "hardware"
+    ],
+    "featured": true,
+    "country": "India",
+    "id": "v-guard",
+    "_id": "v-guard",
+    "is_active": true,
+    "order": 64,
+    "logo": "/static/images/brands/v-guard.png"
+  }
+]

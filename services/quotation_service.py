@@ -39,9 +39,16 @@ def format_record(record):
         record['item_list'] = record['items']
     return record
 
-def _load_local_quotations():
-    global _LOCAL_QUOTATIONS
-    if _LOCAL_QUOTATIONS is not None:
+_LOCAL_QUOTATIONS_MTIME = 0
+
+def _load_local_quotations(force_reload=False):
+    global _LOCAL_QUOTATIONS, _LOCAL_QUOTATIONS_MTIME
+    try:
+        mtime = os.path.getmtime(DATA_FILE_PATH) if os.path.exists(DATA_FILE_PATH) else 0
+    except OSError:
+        mtime = 0
+
+    if not force_reload and _LOCAL_QUOTATIONS is not None and mtime == _LOCAL_QUOTATIONS_MTIME:
         return _LOCAL_QUOTATIONS
 
     if os.path.exists(DATA_FILE_PATH):
@@ -50,12 +57,13 @@ def _load_local_quotations():
                 data = json.load(f)
                 if isinstance(data, list):
                     _LOCAL_QUOTATIONS = [format_record(q) for q in data]
+                    _LOCAL_QUOTATIONS_MTIME = mtime
                     return _LOCAL_QUOTATIONS
         except Exception as e:
             print(f"⚠️ Notice reading {DATA_FILE_PATH}: {e}")
 
     _LOCAL_QUOTATIONS = []
-    _save_local_quotations()
+    _LOCAL_QUOTATIONS_MTIME = mtime
     return _LOCAL_QUOTATIONS
 
 def _save_local_quotations():
@@ -252,6 +260,64 @@ class QuotationService:
             if str(q.get('id', '')) == str_id or str(q.get('_id', '')) == str_id or str(q.get('quote_ref', '')) == str_id:
                 return format_record(q)
         return None
+
+    @staticmethod
+    def update_quotation(quote_id, update_data):
+        if not quote_id or not update_data:
+            return False
+
+        quotes = _load_local_quotations()
+        str_id = str(quote_id)
+        now = datetime.now(timezone.utc).isoformat()
+
+        client = get_supabase()
+        if client is not None:
+            try:
+                remote_payload = update_data.copy()
+                remote_payload['updated_at'] = now
+                client.table('quotations').update(remote_payload).eq('id', quote_id).execute()
+            except Exception as e:
+                print(f"QuotationService remote update error: {e}")
+
+        for i, q in enumerate(quotes):
+            if str(q.get('id', '')) == str_id or str(q.get('_id', '')) == str_id or str(q.get('quote_ref', '')) == str_id or str(q.get('reference_id', '')) == str_id:
+                if 'customer_name' in update_data:
+                    quotes[i]['customer_name'] = update_data['customer_name']
+                    quotes[i]['name'] = update_data['customer_name']
+                if 'mobile_number' in update_data:
+                    quotes[i]['mobile_number'] = update_data['mobile_number']
+                    quotes[i]['phone'] = update_data['mobile_number']
+                if 'email' in update_data:
+                    quotes[i]['email'] = update_data['email']
+                if 'city' in update_data:
+                    quotes[i]['city'] = update_data['city']
+                    quotes[i]['address'] = update_data['city']
+                if 'status' in update_data:
+                    quotes[i]['status'] = update_data['status']
+                if 'notes' in update_data or 'admin_notes' in update_data:
+                    notes_val = update_data.get('admin_notes', update_data.get('notes', ''))
+                    quotes[i]['notes'] = notes_val
+                    quotes[i]['admin_notes'] = notes_val
+                if 'message' in update_data:
+                    quotes[i]['message'] = update_data['message']
+                if 'items' in update_data and isinstance(update_data['items'], list):
+                    quotes[i]['items'] = update_data['items']
+                    quotes[i]['quote_items'] = update_data['items']
+                    quotes[i]['item_list'] = update_data['items']
+                if 'total_amount' in update_data:
+                    quotes[i]['total_amount'] = update_data['total_amount']
+                if 'product_name' in update_data:
+                    quotes[i]['product_name'] = update_data['product_name']
+                if 'product_sku' in update_data:
+                    quotes[i]['product_sku'] = update_data['product_sku']
+                if 'quantity' in update_data:
+                    quotes[i]['quantity'] = update_data['quantity']
+
+                quotes[i]['updated_at'] = now
+                format_record(quotes[i])
+                _save_local_quotations()
+                return True
+        return False
 
     @staticmethod
     def update_status(quote_id, status, notes=None):

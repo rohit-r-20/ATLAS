@@ -4,52 +4,75 @@
     "_id": "qt_1790318074933",
     "quote_ref": "#QT-1010",
     "reference_id": "#QT-1010",
-    "customer_name": "Direct WhatsApp Visitor",
-    "name": "Direct WhatsApp Visitor",
-    "mobile_number": "",
-    "phone": "",
-    "email": "",
-    "city": "",
-    "address": "",
+    "customer_name": "Apex Builder Client HTTP",
+    "name": "Apex Builder Client HTTP",
+    "mobile_number": "9998887776",
+    "phone": "9998887776",
+    "email": "builder@apex.com",
+    "city": "Red Hills, Chennai",
+    "address": "Red Hills, Chennai",
     "quote_type": "direct_whatsapp",
     "product_name": "UltraTech Cement 50kg Bag",
     "product_sku": "UTC-50KG",
     "quantity": "",
     "items": [
       {
-        "name": "UltraTech Cement 50kg Bag",
-        "sku": "UTC-50KG",
-        "quantity": "1",
-        "image": "",
-        "brand": ""
+        "name": "CRI Submersible Pump 2HP",
+        "quantity": 1,
+        "sku": "CRI-SUB-20",
+        "price": 16000,
+        "brand": "CRI"
+      },
+      {
+        "name": "DeWalt Angle Grinder",
+        "quantity": 2,
+        "sku": "DW801",
+        "price": 8000,
+        "brand": "DeWalt"
       }
     ],
     "item_count": 1,
-    "message": "Clicked Direct WhatsApp Enquiry button on product page",
+    "message": "",
     "whatsapp_url": "https://wa.me/919940173877?text=Hi",
     "preferred_contact": "WhatsApp Message",
-    "status": "New",
-    "notes": "",
-    "admin_notes": "",
+    "status": "Quoted",
+    "notes": "Contractor discount approved.",
+    "admin_notes": "Contractor discount approved.",
     "created_at": "2026-09-25T06:34:34.933799+00:00",
     "quote_items": [
       {
-        "name": "UltraTech Cement 50kg Bag",
-        "sku": "UTC-50KG",
-        "quantity": "1",
-        "image": "",
-        "brand": ""
+        "name": "CRI Submersible Pump 2HP",
+        "quantity": 1,
+        "sku": "CRI-SUB-20",
+        "price": 16000,
+        "brand": "CRI"
+      },
+      {
+        "name": "DeWalt Angle Grinder",
+        "quantity": 2,
+        "sku": "DW801",
+        "price": 8000,
+        "brand": "DeWalt"
       }
     ],
     "item_list": [
       {
-        "name": "UltraTech Cement 50kg Bag",
-        "sku": "UTC-50KG",
-        "quantity": "1",
-        "image": "",
-        "brand": ""
+        "name": "CRI Submersible Pump 2HP",
+        "quantity": 1,
+        "sku": "CRI-SUB-20",
+        "price": 16000,
+        "brand": "CRI"
+      },
+      {
+        "name": "DeWalt Angle Grinder",
+        "quantity": 2,
+        "sku": "DW801",
+        "price": 8000,
+        "brand": "DeWalt"
       }
-    ]
+    ],
+    "total_amount": "32000",
+    "updated_at": "2026-09-27T05:54:05.023674+00:00"
   },
   {
     "id": "qt_1790318074909",
