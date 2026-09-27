@@ -505,15 +505,21 @@ def edit_brand(brand_id):
             if ok:
                 logo_url = res
 
+        existing_brand = BrandModel.find_by_id(brand_id) or BrandModel.find_by_slug(brand_id) or {}
+        country = data.get('country', '').strip() or existing_brand.get('country', 'India')
+        description = data.get('description', '').strip() if 'description' in data else existing_brand.get('description', '')
+        website = data.get('website', '').strip() if 'website' in data else existing_brand.get('website', '')
+        featured = ('featured' in request.form) if 'featured' in data or 'featured' in request.form else existing_brand.get('featured', False)
+
         update_payload = {
             'name': name,
             'slug': slug,
             'businesses': businesses,
-            'country': data.get('country', 'India').strip() or 'India',
-            'featured': 'featured' in request.form,
-            'description': data.get('description', '').strip(),
-            'website': data.get('website', '').strip(),
-            'is_active': 'is_active' in request.form
+            'country': country,
+            'featured': featured,
+            'description': description,
+            'website': website,
+            'is_active': 'is_active' in request.form if 'is_active' in request.form else existing_brand.get('is_active', True)
         }
         if logo_url:
             update_payload['logo'] = logo_url

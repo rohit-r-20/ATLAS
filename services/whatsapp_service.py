@@ -48,7 +48,7 @@ def format_whatsapp_quote_message(enquiry_data):
     timestamp = datetime.now().strftime("%d-%b-%Y %I:%M %p")
     
     lines = [
-        "📦 *NEW QUOTE REQUEST - SATHIK TRADERS*",
+        "📦 *NEW QUOTE REQUEST - SATHIK *",
         "━━━━━━━━━━━━━━━━━━━━━",
         f"👤 *Customer:* {customer_name}",
         f"📱 *Phone:* {mobile}",
