@@ -494,21 +494,28 @@
 
   /* CTA Strip */
   .loc-cta-strip {
-    background: linear-gradient(135deg, #090e17 0%, #1e293b 100%);
-    color: #fff;
+    background: radial-gradient(circle at 50% 0%, rgba(249, 115, 22, 0.15) 0%, transparent 70%),
+                linear-gradient(135deg, #090e17 0%, #0f172a 50%, #1e293b 100%);
+    color: #ffffff !important;
     padding: 3.5rem 0;
     text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
   .loc-cta-strip h2 {
     font-family: 'Cinzel', serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 0.6rem;
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+    font-weight: 800;
+    color: #ffffff !important;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
   .loc-cta-strip p {
-    color: rgba(255,255,255,0.8);
-    margin-bottom: 1.5rem;
-    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.92) !important;
+    margin: 0 auto 1.6rem !important;
+    font-size: 1rem;
+    max-width: 680px;
+    line-height: 1.6;
   }
   .loc-cta-strip a {
     display: inline-flex;
@@ -838,7 +845,7 @@
 </section>
 
 <!-- CTA STRIP -->
-<section class="loc-cta-strip" id="red-hills-contact">
+<section class="loc-cta-strip bg-dark" id="red-hills-contact">
   <div class="loc-container">
     <h2>Visit Us in Red Hills — or Request a Quote</h2>
     <p>Send us a WhatsApp message or visit any of our three stores on G.N.T. Road, Red Hills, Chennai – 600 052.</p>
