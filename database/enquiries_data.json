@@ -1,1 +1,45 @@
-[]
+[
+  {
+    "id": "enq_1790497854104",
+    "_id": "enq_1790497854104",
+    "enquiry_ref": "#ENQ-1001",
+    "reference_id": "#ENQ-1001",
+    "customer_name": "Rohit R",
+    "name": "Rohit R",
+    "mobile_number": "+919498050929",
+    "phone": "+919498050929",
+    "mobile": "+919498050929",
+    "email": "vrrohit2004@gmail.com",
+    "city": "Karanodai",
+    "address": "Karanodai",
+    "interested_in": "",
+    "product_name": "hello",
+    "product_sku": "",
+    "items": [
+      {
+        "name": "hello",
+        "sku": "",
+        "quantity": 1,
+        "brand": ""
+      }
+    ],
+    "cart_items": [
+      {
+        "name": "hello",
+        "sku": "",
+        "quantity": 1,
+        "brand": ""
+      }
+    ],
+    "preferred_contact": "WhatsApp Message",
+    "message": "",
+    "page_url": "https://sathikgroups.com/",
+    "status": "New",
+    "admin_notes": "",
+    "whatsapp_url": "https://api.whatsapp.com/send?phone=919840637307&text=%F0%9F%93%A6%20%2ANEW%20QUOTE%20REQUEST%20-%20SATHIK%20TRADERS%2A%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%F0%9F%91%A4%20%2ACustomer%3A%2A%20Rohit%20R%0A%F0%9F%93%B1%20%2APhone%3A%2A%20%2B919498050929%0A%E2%9C%89%EF%B8%8F%20%2AEmail%3A%2A%20vrrohit2004%40gmail.com%0A%F0%9F%93%8D%20%2ALocation%3A%2A%20Karanodai%0A%F0%9F%8F%B7%EF%B8%8F%20%2AProduct%20/%20Items%3A%2A%20hello%0A%F0%9F%92%AC%20%2APreferred%20Contact%3A%2A%20WhatsApp%20Message%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%E2%8F%B1%EF%B8%8F%20%2ATime%3A%2A%2027-Sep-2026%2008%3A30%20AM%0A%F0%9F%8C%90%20%2ASource%3A%2A%20Sathik%20Groups%20Web%20Platform%20%28sathikgroups.com%29",
+    "is_deleted": false,
+    "deleted_at": null,
+    "created_at": "2026-09-27T08:30:54.104416+00:00",
+    "updated_at": "2026-09-27T08:30:54.104416+00:00"
+  }
+]
