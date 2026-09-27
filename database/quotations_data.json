@@ -1,5 +1,39 @@
 [
   {
+    "id": "qt_1790519455468",
+    "_id": "qt_1790519455468",
+    "quote_ref": "#QT-1002",
+    "reference_id": "#QT-1002",
+    "customer_name": "Haafid",
+    "name": "Haafid",
+    "mobile_number": "9940149081",
+    "phone": "9940149081",
+    "email": "",
+    "city": "Redhills",
+    "address": "Redhills",
+    "quote_type": "quote_list",
+    "product_name": "Multiple Products Quote List",
+    "product_sku": "",
+    "quantity": "",
+    "items": [
+      {
+        "name": "Locks",
+        "sku": "HDW-LCK-ALL",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/locks_common.jpg",
+        "brand": ""
+      }
+    ],
+    "item_count": 1,
+    "message": "Hi, please send a price quote and availability details for the following products:\r\n- Locks (SKU: HDW-LCK-ALL)\r\n\r\nThank you!",
+    "whatsapp_url": "https://api.whatsapp.com/send?phone=919840637307&text=%F0%9F%93%A6%20%2ANEW%20QUOTE%20REQUEST%20-%20SATHIK%20%2A%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%F0%9F%91%A4%20%2ACustomer%3A%2A%20Haafid%0A%F0%9F%93%B1%20%2APhone%3A%2A%209940149081%0A%F0%9F%93%8D%20%2ALocation%3A%2A%20Redhills%0A%F0%9F%8F%A2%20%2AVertical%20/%20Category%3A%2A%20Multiple%20Showrooms%0A%F0%9F%8F%B7%EF%B8%8F%20%2AProduct%20/%20Items%3A%2A%20Multiple%20Products%20Quote%20List%0A%F0%9F%92%AC%20%2APreferred%20Contact%3A%2A%20WhatsApp%20Message%0A%F0%9F%93%9D%20%2ADetails%20/%20Requirements%3A%2A%0AHi%2C%20please%20send%20a%20price%20quote%20and%20availability%20details%20for%20the%20following%20products%3A%0D%0A-%20Locks%20%28SKU%3A%20HDW-LCK-ALL%29%0D%0A%0D%0AThank%20you%21%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%E2%8F%B1%EF%B8%8F%20%2ATime%3A%2A%2027-Sep-2026%2002%3A30%20PM%0A%F0%9F%8C%90%20%2ASource%3A%2A%20Sathik%20Groups%20Web%20Platform%20%28sathikgroups.com%29",
+    "preferred_contact": "WhatsApp Message",
+    "status": "New",
+    "notes": "",
+    "admin_notes": "",
+    "created_at": "2026-09-27T14:30:55.468519+00:00"
+  },
+  {
     "id": "qt_1790497855243",
     "_id": "qt_1790497855243",
     "quote_ref": "#QT-1001",
@@ -31,6 +65,24 @@
     "status": "New",
     "notes": "",
     "admin_notes": "",
-    "created_at": "2026-09-27T08:30:55.243191+00:00"
+    "created_at": "2026-09-27T08:30:55.243191+00:00",
+    "quote_items": [
+      {
+        "name": "hello",
+        "sku": "",
+        "quantity": "1",
+        "image": "",
+        "brand": ""
+      }
+    ],
+    "item_list": [
+      {
+        "name": "hello",
+        "sku": "",
+        "quantity": "1",
+        "image": "",
+        "brand": ""
+      }
+    ]
   }
 ]
