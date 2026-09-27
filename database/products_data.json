@@ -19,37 +19,6 @@
     "brand_name": "Finolex",
     "available_brands": [],
     "available_brand_slugs": [],
-    "is_active": false,
-    "is_featured": false,
-    "is_new": false,
-    "id": "p_finolux-cpvc-pipe-and-fitting_1790517911",
-    "_id": "p_finolux-cpvc-pipe-and-fitting_1790517911",
-    "created_at": "2026-09-27T14:05:11.394917",
-    "updated_at": "2026-09-27T14:08:01.976899",
-    "sort_order": 0,
-    "is_deleted": true,
-    "deleted_at": "2026-09-27T14:08:01.976899"
-  },
-  {
-    "name": "finolux cpvc pipe and fitting",
-    "slug": "finolux-cpvc-pipe-and-fitting",
-    "sku": "CPVC PIPE",
-    "description": "Finolex CPVC Pipes are our premium offering, manufactured using high-quality raw materials and adopting advanced technology. These pipes are perfect for hot and cold-water applications and can withstand higher temperatures than other plastic piping systems. ",
-    "short_description": " CPVC Pipes & Fittings",
-    "features": [],
-    "images": [
-      {
-        "url": "/static/images/placeholder.jpg",
-        "is_primary": true
-      }
-    ],
-    "business_slug": "plumbing",
-    "category_slug": "pipes",
-    "subcategory_slug": "cpvc-pipe",
-    "brand_slug": "finolex",
-    "brand_name": "Finolex",
-    "available_brands": [],
-    "available_brand_slugs": [],
     "is_active": true,
     "is_featured": false,
     "is_new": false,
