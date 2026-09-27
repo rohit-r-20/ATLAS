@@ -70,7 +70,7 @@ across Chennai since 1964.{% endblock %}
 
     <!-- Slide 2: Plumbing Products Store -->
     <div class="hero-slide"
-      style="background-image: url('{{ url_for('static', filename='images/hero/plumbing_slide.webp') }}?v=210');">
+      style="background-image: url('{{ url_for('static', filename='images/hero/plumbing_slide.webp') }}?v=230');">
       <div class="hero-inner">
         <div class="container">
           <div class="hero-content">
@@ -111,7 +111,7 @@ across Chennai since 1964.{% endblock %}
 
     <!-- Slide 3: Luxury Bath & Sanitaryware -->
     <div class="hero-slide hero-slide-bath"
-      style="background-image: url('{{ url_for('static', filename='images/hero/bath_kitchen_slide.webp') }}?v=200');">
+      style="background-image: url('{{ url_for('static', filename='images/hero/bath_kitchen_slide.webp') }}?v=230');">
       <div class="hero-inner">
         <div class="container">
           <div class="hero-content">
@@ -150,6 +150,18 @@ across Chennai since 1964.{% endblock %}
       </div>
     </div>
   </div>
+
+  <!-- Hero Carousel Navigation Arrows -->
+  <button class="hero-arrow hero-arrow-left" onclick="prevSlide()" aria-label="Previous Slide" title="Previous Slide">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+  <button class="hero-arrow hero-arrow-right" onclick="nextSlide()" aria-label="Next Slide" title="Next Slide">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
 
   <!-- Slide Navigation Indicators (Clean bottom dots) -->
   <div class="hero-indicators-wrap">

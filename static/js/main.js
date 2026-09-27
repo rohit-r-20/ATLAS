@@ -481,13 +481,17 @@ document.addEventListener('DOMContentLoaded', () => {
     startSlideTimer();
   };
 
-  function nextSlide() {
+  window.nextSlide = function() {
     window.setSlide(currentSlide + 1);
-  }
+  };
+
+  window.prevSlide = function() {
+    window.setSlide(currentSlide - 1);
+  };
 
   function startSlideTimer() {
     if (slides.length > 1 && !slideInterval) {
-      slideInterval = setInterval(nextSlide, 10000); // rotate every 10 seconds as requested
+      slideInterval = setInterval(window.nextSlide, 10000); // rotate every 10 seconds as requested
     }
   }
 
@@ -501,6 +505,84 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize auto-rotation if slides exist
   if (slides.length > 0) {
     startSlideTimer();
+  }
+
+  // Touch and pointer swipe gesture navigation on hero section
+  const heroEl = document.getElementById('hero');
+  if (heroEl) {
+    let startX = 0;
+    let startY = 0;
+    let endX = 0;
+    let endY = 0;
+    let isTracking = false;
+    let isMouseDown = false;
+
+    // Touch events for mobile/tablets
+    heroEl.addEventListener('touchstart', function(e) {
+      if (e.touches && e.touches.length === 1) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        endX = startX;
+        endY = startY;
+        isTracking = true;
+      }
+    }, { passive: true });
+
+    heroEl.addEventListener('touchmove', function(e) {
+      if (!isTracking || !e.touches || e.touches.length !== 1) return;
+      endX = e.touches[0].clientX;
+      endY = e.touches[0].clientY;
+    }, { passive: true });
+
+    heroEl.addEventListener('touchend', function() {
+      if (!isTracking) return;
+      isTracking = false;
+      const deltaX = endX - startX;
+      const deltaY = endY - startY;
+
+      // Minimum swipe distance threshold (40px) with horizontal dominance
+      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15) {
+        if (deltaX < 0) {
+          // Swiped left -> next slide
+          window.nextSlide();
+        } else {
+          // Swiped right -> prev slide
+          window.prevSlide();
+        }
+      }
+    }, { passive: true });
+
+    // Mouse drag events for desktop swipe
+    heroEl.addEventListener('mousedown', function(e) {
+      // Don't trigger swipe if clicking buttons, links or dots
+      if (e.target.closest('a, button, input, .indicator-dot, .hero-arrow')) return;
+      isMouseDown = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      endX = startX;
+      endY = startY;
+    });
+
+    window.addEventListener('mousemove', function(e) {
+      if (!isMouseDown) return;
+      endX = e.clientX;
+      endY = e.clientY;
+    });
+
+    window.addEventListener('mouseup', function(e) {
+      if (!isMouseDown) return;
+      isMouseDown = false;
+      const deltaX = endX - startX;
+      const deltaY = endY - startY;
+
+      if (Math.abs(deltaX) > 60 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+        if (deltaX < 0) {
+          window.nextSlide();
+        } else {
+          window.prevSlide();
+        }
+      }
+    });
   }
 
   /* ──────────────────────────────────────────────────────────

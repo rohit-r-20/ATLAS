@@ -1134,13 +1134,13 @@ body.modal-open {
   }
 
   .hero-slides .hero-slide:nth-child(2) {
-    background-image: url('/static/images/hero/plumbing_slide_mobile.webp?v=210') !important;
+    background-image: url('/static/images/hero/plumbing_slide_mobile.webp?v=230') !important;
     background-position: center top !important;
   }
 
   .hero-slide.hero-slide-bath,
   .hero-slides .hero-slide:nth-child(3) {
-    background-image: url('/static/images/hero/bath_kitchen_slide_mobile.webp?v=200') !important;
+    background-image: url('/static/images/hero/bath_kitchen_slide_mobile.webp?v=230') !important;
     background-position: center top !important;
   }
 
