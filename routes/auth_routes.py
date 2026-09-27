@@ -4,7 +4,7 @@ from utils.validators import validate_login_input
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/ashiksathik', methods=['GET', 'POST'])
+@auth_bp.route('/msasathik', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         if session.get('user_id'):
@@ -57,6 +57,10 @@ def login():
         return jsonify({'success': True, 'redirect': target_url})
 
     return redirect(target_url)
+
+@auth_bp.route('/ashiksathik', methods=['GET', 'POST'])
+def old_login():
+    return redirect(url_for('auth.login'), code=301)
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():

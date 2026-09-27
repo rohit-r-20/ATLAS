@@ -42,6 +42,10 @@
       "dest": "/api/backend.py"
     },
     {
+      "src": "/msasathik(/.*)?",
+      "dest": "/api/backend.py"
+    },
+    {
       "src": "/ashiksathik(/.*)?",
       "dest": "/api/backend.py"
     },

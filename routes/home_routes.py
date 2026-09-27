@@ -79,6 +79,7 @@ def robots():
         "User-agent: *\n"
         "Allow: /\n"
         "Disallow: /admin/\n"
+        "Disallow: /msasathik\n"
         "Disallow: /ashiksathik\n"
         "Disallow: /register\n"
         "Disallow: /logout\n"

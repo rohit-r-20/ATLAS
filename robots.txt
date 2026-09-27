@@ -4,6 +4,7 @@ Allow: /
 
 # Disallow private admin, auth, and backend API endpoints
 Disallow: /admin/
+Disallow: /msasathik
 Disallow: /ashiksathik
 Disallow: /register
 Disallow: /logout
