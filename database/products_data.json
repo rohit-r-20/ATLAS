@@ -1,5 +1,34 @@
 [
   {
+    "name": "germa cabinet",
+    "slug": "germa-cabinet",
+    "sku": "TR-3111",
+    "description": "Premium aluminum fabricated vanity cabinet with marble-pattern skin finish\r\n\r\n100% waterproof construction, ideal for bathroom use\r\n\r\nLightweight yet highly durable for long-lasting performance\r\n\r\nIntegrated storage cabinet for organized bathroom essentials\r\n\r\nElegant mirror cabinet with modern look\r\n\r\nComes with A+ grade ceramic wash basin for superior quality and finish",
+    "short_description": "Washbasin Cabinet Along with Mirror Cabinet - TR 3111-50 CARARA BLACK",
+    "features": [],
+    "images": [
+      {
+        "url": "https://raw.githubusercontent.com/rohit-r-20/Sathik/main/static/uploads/germa_cabinet.webp",
+        "is_primary": true
+      }
+    ],
+    "business_slug": "bath-kitchen",
+    "category_slug": "bath-hardware-mirrors",
+    "subcategory_slug": "led-mirrors",
+    "brand_slug": "germa",
+    "brand_name": "Germa",
+    "available_brands": [],
+    "available_brand_slugs": [],
+    "is_active": true,
+    "is_featured": false,
+    "is_new": false,
+    "id": "p_germa-cabinet_1790493541",
+    "_id": "p_germa-cabinet_1790493541",
+    "created_at": "2026-09-27T07:19:01.686442",
+    "updated_at": "2026-09-27T07:19:01.686442",
+    "sort_order": 0
+  },
+  {
     "name": "Sika Bond & Seal Polyurethane",
     "slug": "sika-bond-seal-polyurethane",
     "sku": "SIKA-SEAL-PU",
