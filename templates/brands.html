@@ -33,8 +33,13 @@
       <div class="brands-grid" style="margin-top: 1.5rem;">
         {% for b in featured_brands %}
         <a href="{{ url_for('brand.brand_detail', slug=b.slug) }}" class="brand-card">
+          {% if b.logo %}
+          <div style="height: 50px; display: flex; align-items: center; justify-content: center; width: 100%;">
+            <img src="{{ b.logo }}" alt="{{ b.name }}" style="max-height: 48px; max-width: 140px; object-fit: contain;" onerror="this.parentElement.style.display='none';">
+          </div>
+          {% endif %}
           <div class="brand-logo-text">{{ b.name }}</div>
-          <div style="font-size: 0.75rem; color: var(--primary-500); uppercase;">{{ b.country or 'India' }}</div>
+          <div style="font-size: 0.75rem; color: var(--primary-500); text-transform: uppercase;">{{ b.country or 'India' }}</div>
           <span style="font-size: 0.8125rem; color: var(--accent); font-weight: 600;">View Catalogue &rarr;</span>
         </a>
         {% endfor %}
@@ -47,6 +52,11 @@
       <div class="brands-grid" style="margin-top: 1.5rem;">
         {% for b in brands %}
         <a href="{{ url_for('brand.brand_detail', slug=b.slug) }}" class="brand-card">
+          {% if b.logo %}
+          <div style="height: 50px; display: flex; align-items: center; justify-content: center; width: 100%;">
+            <img src="{{ b.logo }}" alt="{{ b.name }}" style="max-height: 48px; max-width: 140px; object-fit: contain;" onerror="this.parentElement.style.display='none';">
+          </div>
+          {% endif %}
           <div class="brand-logo-text">{{ b.name }}</div>
           <div style="font-size: 0.75rem; color: var(--primary-500);">{{ b.country or 'India' }}</div>
           <span style="font-size: 0.8125rem; color: var(--accent); font-weight: 600;">View Catalogue &rarr;</span>

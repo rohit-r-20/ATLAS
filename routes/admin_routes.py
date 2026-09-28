@@ -10,7 +10,7 @@ from models.project import ProjectModel
 from models.settings import SettingModel
 from utils.constants import BUSINESSES
 from utils.helpers import generate_slug
-from services.image_service import save_uploaded_image
+from services.image_service import save_uploaded_image, save_brand_logo
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -455,9 +455,11 @@ def create_brand():
         logo_url = data.get('logo_url', '').strip()
         if 'logo' in request.files and request.files['logo'].filename:
             file = request.files['logo']
-            ok, res = save_uploaded_image(file, current_app.config['UPLOAD_FOLDER'], current_app.config['ALLOWED_EXTENSIONS'])
+            ok, res = save_brand_logo(file, slug, current_app.config.get('ALLOWED_EXTENSIONS'))
             if ok:
                 logo_url = res
+            else:
+                flash(f'Logo upload note: {res}', 'warning')
 
         brand_data = {
             'name': name,
@@ -501,9 +503,11 @@ def edit_brand(brand_id):
         logo_url = data.get('logo_url', '').strip()
         if 'logo' in request.files and request.files['logo'].filename:
             file = request.files['logo']
-            ok, res = save_uploaded_image(file, current_app.config['UPLOAD_FOLDER'], current_app.config['ALLOWED_EXTENSIONS'])
+            ok, res = save_brand_logo(file, slug, current_app.config.get('ALLOWED_EXTENSIONS'))
             if ok:
                 logo_url = res
+            else:
+                flash(f'Logo upload note: {res}', 'warning')
 
         existing_brand = BrandModel.find_by_id(brand_id) or BrandModel.find_by_slug(brand_id) or {}
         country = data.get('country', '').strip() or existing_brand.get('country', 'India')

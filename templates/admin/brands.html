@@ -206,7 +206,7 @@
               <!-- Actions -->
               <td style="text-align: right;">
                 <div style="display: flex; gap: 0.35rem; justify-content: flex-end;">
-                  <button type="button" class="btn btn-sm btn-outline" onclick='openEditBrandModal({{ b|tojson|safe }})' title="Edit Brand">
+                  <button type="button" class="btn btn-sm btn-outline" onclick="openEditBrandModal({{ (b.id or b.slug)|tojson }})" title="Edit Brand">
                     ✏️ Edit
                   </button>
                   <form action="{{ url_for('admin.delete_brand', brand_id=b.id or b.slug) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove {{ b.name|escape }} from brands?');" style="display: inline;">
@@ -267,7 +267,8 @@
 
         <div class="form-group" style="margin-bottom: 0.5rem;">
           <label class="form-label">Brand Logo</label>
-          <input type="file" name="logo" class="form-input" accept="image/*">
+          <input type="file" name="logo" class="form-input" accept="image/*, .webp, .webpg, .png, .jpg, .jpeg, .svg">
+          <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.3rem;">Supports WEBP, WEBPG, PNG, JPG, SVG. Auto-sized for high quality.</div>
         </div>
       </div>
       <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0;">
@@ -317,7 +318,8 @@
             <img id="edit-brand-logo-preview" src="" alt="Preview" class="brand-logo-thumb" style="display: none;">
             <span id="edit-brand-logo-path" style="font-size: 0.75rem; color: #64748b;"></span>
           </div>
-          <input type="file" name="logo" class="form-input" accept="image/*">
+          <input type="file" name="logo" class="form-input" accept="image/*, .webp, .webpg, .png, .jpg, .jpeg, .svg">
+          <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.3rem;">Upload new logo to replace existing. Supports WEBP, WEBPG, PNG, JPG, SVG.</div>
         </div>
       </div>
       <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0;">
@@ -331,12 +333,21 @@
 
 {% block extra_js %}
 <script>
+  const BRANDS_DATA = {};
+  {% for b in brands %}
+  BRANDS_DATA[{{ (b.id or b.slug)|tojson }}] = {{ b|tojson|safe }};
+  {% endfor %}
+
   function openAddBrandModal() {
     openModal('add-brand-modal');
   }
 
-  function openEditBrandModal(brand) {
-    if (!brand) return;
+  function openEditBrandModal(brandOrId) {
+    if (!brandOrId) return;
+    let brand = brandOrId;
+    if (typeof brandOrId === 'string') {
+      brand = BRANDS_DATA[brandOrId] || { id: brandOrId, slug: brandOrId };
+    }
     const form = document.getElementById('edit-brand-form');
     const brandId = brand.id || brand.slug;
     form.action = '/admin/brands/' + encodeURIComponent(brandId) + '/edit';

@@ -3,6 +3,10 @@ from flask import Flask, render_template
 from config import Config
 from database.supabase import init_supabase
 
+import mimetypes
+mimetypes.add_type('image/webp', '.webpg')
+mimetypes.add_type('image/webp', '.webp')
+
 # Import Blueprints
 from routes.home_routes import home_bp
 from routes.product_routes import product_bp

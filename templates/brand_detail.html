@@ -132,6 +132,14 @@
       {{ brand_seo.badge if brand_seo else '✓ Genuine Products' }}
     </div>
 
+    {% if brand.logo %}
+    <div style="margin-bottom: 1.25rem;">
+      <div style="background: rgba(255, 255, 255, 0.95); display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 12px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);">
+        <img src="{{ brand.logo }}" alt="{{ brand.name }}" style="max-height: 52px; max-width: 180px; object-fit: contain;" onerror="this.closest('div').style.display='none';">
+      </div>
+    </div>
+    {% endif %}
+
     <!-- Single H1 for the page -->
     <h1 class="brand-hero-title">
       {{ brand_seo.h1 if brand_seo else (brand.name ~ ' in Red Hills, Chennai') }}
