@@ -4,7 +4,7 @@
     "slug": "cri-column-pipe",
     "sku": "CRI SUB PIPE",
     "description": "C.R.I. uPVC Column pipes are specially designed for submersible pumps, capable of handling both internal hydrostatic pressure as well as high tensile load caused by the pump weight & column water pressure and weight.\r\n\r\nIn general the first pipe fitted with the pump will be subjected to high hydro-static pressure and the top most one has to withstand the entire weight of the column water & pump. uPVC column pipes are available in 33,42,48,60,75,88,113 and 140 mm sizes of outer diameter under Elite, ESPY, Medium, Standard, Heavy, and Super Heavy types. The maximum working head for Coupler type is up to 450 mtrs and for Bell Mouth up to 300 mtrs.",
-    "short_description": "UPVC COLUMN PIPE – 3MTR (10 FEET) ",
+    "short_description": "UPVC COLUMN PIPE – 3MTR (10 FEET) {size available 1\",11/4\",11/2\",2\",21/2\",3\",4\"}",
     "features": [],
     "images": [
       {
@@ -14,7 +14,7 @@
     ],
     "business_slug": "plumbing",
     "category_slug": "pipes",
-    "subcategory_slug": "cri-sub-pipe",
+    "subcategory_slug": "hoses-tubes",
     "brand_slug": "cri",
     "brand_name": "C.R.I. Pumps",
     "available_brands": [],
@@ -25,7 +25,7 @@
     "id": "p_cri-colomon-pipe_1790612820",
     "_id": "p_cri-colomon-pipe_1790612820",
     "created_at": "2026-09-28T16:27:00.698463",
-    "updated_at": "2026-09-28T16:29:20.538402",
+    "updated_at": "2026-09-28T16:32:19.147081",
     "sort_order": 0
   },
   {
