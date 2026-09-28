@@ -82,9 +82,9 @@
     "status": "New",
     "admin_notes": "",
     "whatsapp_url": "https://api.whatsapp.com/send?phone=919840637307&text=%F0%9F%93%A6%20%2ANEW%20QUOTE%20REQUEST%20-%20SATHIK%20TRADERS%2A%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%F0%9F%91%A4%20%2ACustomer%3A%2A%20Rohit%20R%0A%F0%9F%93%B1%20%2APhone%3A%2A%20%2B919498050929%0A%E2%9C%89%EF%B8%8F%20%2AEmail%3A%2A%20vrrohit2004%40gmail.com%0A%F0%9F%93%8D%20%2ALocation%3A%2A%20Karanodai%0A%F0%9F%8F%B7%EF%B8%8F%20%2AProduct%20/%20Items%3A%2A%20hello%0A%F0%9F%92%AC%20%2APreferred%20Contact%3A%2A%20WhatsApp%20Message%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%E2%8F%B1%EF%B8%8F%20%2ATime%3A%2A%2027-Sep-2026%2008%3A30%20AM%0A%F0%9F%8C%90%20%2ASource%3A%2A%20Sathik%20Groups%20Web%20Platform%20%28sathikgroups.com%29",
-    "is_deleted": false,
-    "deleted_at": null,
+    "is_deleted": true,
+    "deleted_at": "2026-09-28T16:34:16.068081+00:00",
     "created_at": "2026-09-27T08:30:54.104416+00:00",
-    "updated_at": "2026-09-27T08:30:54.104416+00:00"
+    "updated_at": "2026-09-28T16:34:16.068081+00:00"
   }
 ]
