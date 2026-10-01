@@ -15,7 +15,7 @@
   <div class="product-info">
     <div class="product-top-meta" style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap;">
       <span class="store-badge {{ p.business_slug }}">
-        {% if p.business_slug == 'plumbing' %}🔧 Plumbing
+        {% if p.business_slug == 'plumbing' %}🔧 Pumps &amp; Plumbing
         {% elif p.business_slug == 'hardware' %}🔨 Hardware
         {% elif p.business_slug == 'bath-kitchen' %}🛁 Bathware
         {% else %}📦 General
@@ -54,9 +54,9 @@
         {% set active_biz = namespace(found=none) %}
         {% for b in businesses %}{% if b.slug == current_business %}{% set active_biz.found = b %}{% endif %}{% endfor %}
         {% if active_biz.found %}
-          <a href="{{ url_for('category.store_detail', business_slug=current_business) }}" style="color: var(--primary-600, #0284c7); text-decoration: none; font-weight: 500;">{{ active_biz.found.name }} Store</a>
+          <a href="{{ url_for('category.store_detail', business_slug=current_business) }}" style="color: var(--primary-600, #0284c7); text-decoration: none; font-weight: 500;">{% if current_business == 'plumbing' %}Pumps &amp; Plumbing{% else %}{{ active_biz.found.name }}{% endif %} Store</a>
         {% else %}
-          <a href="{{ url_for('category.store_detail', business_slug=current_business) }}" style="color: var(--primary-600, #0284c7); text-decoration: none; font-weight: 500;">{{ current_business|title }} Store</a>
+          <a href="{{ url_for('category.store_detail', business_slug=current_business) }}" style="color: var(--primary-600, #0284c7); text-decoration: none; font-weight: 500;">{% if current_business == 'plumbing' %}Pumps &amp; Plumbing{% else %}{{ current_business|title }}{% endif %} Store</a>
         {% endif %}
         <span style="color: #94a3b8;">&rsaquo;</span>
       {% endif %}
@@ -125,7 +125,7 @@
               <option value="{{ url_for('product.product_list', category=current_category, brand=current_brand, q=search_query) }}">All Businesses</option>
               {% for b in businesses %}
                 <option value="{{ url_for('product.product_list', business=b.slug, category=current_category, brand=current_brand, q=search_query) }}" {% if current_business == b.slug %}selected{% endif %}>
-                  {{ b.name }}
+                  {% if b.slug == 'plumbing' %}Pumps &amp; Plumbing{% elif b.slug == 'hardware' %}Hardware &amp; Paints{% elif b.slug == 'bath-kitchen' %}Bath &amp; Sanitaryware{% else %}{{ b.name }}{% endif %}
                 </option>
               {% endfor %}
             </select>
@@ -197,7 +197,7 @@
             <a href="{{ url_for('product.product_list', business=b.slug, q=search_query) }}" class="store-tab {{ b.slug }} {% if current_business == b.slug %}active{% endif %}">
               <span class="store-tab-icon">{{ b.icon }}</span>
               <span class="store-tab-label">
-                {% if b.slug == 'plumbing' %}Plumbing
+                {% if b.slug == 'plumbing' %}Pumps &amp; Plumbing
                 {% elif b.slug == 'hardware' %}Hardware &amp; Paints
                 {% elif b.slug == 'bath-kitchen' %}Bath &amp; Sanitaryware
                 {% else %}{{ b.name }}
@@ -262,7 +262,7 @@
               <div class="store-group-title-area">
                 <span class="store-group-icon">🔧</span>
                 <div>
-                  <h3 class="store-group-name">Plumbing &amp; Industrial Materials</h3>
+                  <h3 class="store-group-name">Pumps &amp; Plumbing</h3>
                   <p class="store-group-desc">Heavy-duty water pipes, leak-free CPVC/UPVC fittings, and automated water pump systems.</p>
                 </div>
               </div>
@@ -318,7 +318,7 @@
           <div class="products-results-bar">
             <div class="results-count">
               Showing <strong>{{ products|length }}</strong> of <strong>{{ total_products }}</strong> products
-              {% if current_business %}<span class="active-filter-badge business">{{ current_business|replace('-', ' ')|title }}</span>{% endif %}
+              {% if current_business %}<span class="active-filter-badge business">{% if current_business == 'plumbing' %}Pumps &amp; Plumbing{% else %}{{ current_business|replace('-', ' ')|title }}{% endif %}</span>{% endif %}
               {% if current_category %}<span class="active-filter-badge category">{{ current_category|replace('-', ' ')|title }}</span>{% endif %}
               {% if current_subcategory %}<span class="active-filter-badge subcategory">{{ current_subcategory|replace('-', ' ')|title }}</span>{% endif %}
             </div>

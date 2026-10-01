@@ -10,7 +10,7 @@ BUSINESSES = [
     },
     {
         'id': 'plumbing',
-        'name': 'Plumbing and Industrial materials',
+        'name': 'Pumps and Plumbing',
         'slug': 'plumbing',
         'short_description': 'Pipes, fittings, valves, pumps, and water management solutions from top brands.',
         'icon': '🔧',
