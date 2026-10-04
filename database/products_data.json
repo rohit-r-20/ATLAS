@@ -1,5 +1,34 @@
 [
   {
+    "name": "finolux upvc pipes and fitting",
+    "slug": "finolux-upvc-pipes-and-fitting",
+    "sku": "ASTM UPVC PIPE",
+    "description": "Finolex ASTM Pipes are manufactured using the latest technology and high-grade raw material.\r\n\r\nThese pipes are ideal for transportation and distribution of water in households including potable water, industrial process lines, saltwater lines, swimming pools, pipes used for hand pumps, and in down-take lines in plumbing systems.\r\n\r\nManufactured with added strength and crafting precision, Finolex PVC-U pipes have a prolonged life advantage over conventional pipes surpassing most or all traditional metal.",
+    "short_description": "UPVC ASTM Pipes & Fittings",
+    "features": [],
+    "images": [
+      {
+        "url": "https://raw.githubusercontent.com/rohit-r-20/Sathik/main/static/uploads/finolux_upvc.jpg",
+        "is_primary": true
+      }
+    ],
+    "business_slug": "plumbing",
+    "category_slug": "pipes",
+    "subcategory_slug": "hoses-tubes",
+    "brand_slug": "finolex",
+    "brand_name": "Finolex",
+    "available_brands": [],
+    "available_brand_slugs": [],
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "id": "p_finolux-upvc-pipes-and-fitting_1791123197",
+    "_id": "p_finolux-upvc-pipes-and-fitting_1791123197",
+    "created_at": "2026-10-04T14:13:17.840903",
+    "updated_at": "2026-10-04T14:13:17.840903",
+    "sort_order": 0
+  },
+  {
     "name": "CRI PRESSURE BOOSTER PUMPS",
     "slug": "cri-pressure-booster-pumps",
     "sku": "TINY FORCE",
