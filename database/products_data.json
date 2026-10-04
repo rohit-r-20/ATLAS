@@ -161,7 +161,7 @@
     ],
     "business_slug": "plumbing",
     "category_slug": "pipes",
-    "subcategory_slug": "hoses-tubes",
+    "subcategory_slug": "pipes-fitting",
     "brand_slug": "finolex",
     "brand_name": "Finolex",
     "available_brands": [],
@@ -172,7 +172,7 @@
     "id": "p_finolux-cpvc-pipe-and-fitting_1790517911",
     "_id": "p_finolux-cpvc-pipe-and-fitting_1790517911",
     "created_at": "2026-09-27T14:05:11.270349",
-    "updated_at": "2026-10-04T14:04:21.680082",
+    "updated_at": "2026-10-04T14:36:20.249628",
     "sort_order": 0
   },
   {
