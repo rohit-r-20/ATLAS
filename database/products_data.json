@@ -1,5 +1,34 @@
 [
   {
+    "name": "CRI PRESSURE BOOSTER PUMPS",
+    "slug": "cri-pressure-booster-pumps",
+    "sku": "TINY FORCE",
+    "description": "The complete system developed to preserve constants water pressure in all outlets, whenever pressure drops/attains to the desired level, pump will start/stop automatically. Over all compactness of the pressure boosters consumes lesser space and quality assured components were used for high accuracy, so that noise level will be in limit. We could proudly say, C.R.I. Pressure Boosters are “Fit and Forget” products.",
+    "short_description": "C.R.I. Pressure Booster system 1HP & 0.5HP",
+    "features": [],
+    "images": [
+      {
+        "url": "https://raw.githubusercontent.com/rohit-r-20/Sathik/main/static/uploads/2-Tiny-Force-307-304.jpg",
+        "is_primary": true
+      }
+    ],
+    "business_slug": "bath-kitchen",
+    "category_slug": "bathware",
+    "subcategory_slug": "booster-pumps",
+    "brand_slug": "cri",
+    "brand_name": "C.R.I. Pumps",
+    "available_brands": [],
+    "available_brand_slugs": [],
+    "is_active": true,
+    "is_featured": false,
+    "is_new": true,
+    "id": "p_cri-pressure-booster-pumps_1791122023",
+    "_id": "p_cri-pressure-booster-pumps_1791122023",
+    "created_at": "2026-10-04T13:53:43.079002",
+    "updated_at": "2026-10-04T13:53:43.079002",
+    "sort_order": 0
+  },
+  {
     "name": "EKKI BOOSTER PUMPS",
     "slug": "ekki-booster-pumps",
     "sku": "PHM SERIES",
