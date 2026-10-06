@@ -6,10 +6,16 @@ import requests
 from flask import current_app
 
 DATA_FILE_REL_PATH = 'database/products_data.json'
+CATEGORIES_FILE_REL_PATH = 'database/categories_data.json'
+SUBCATEGORIES_FILE_REL_PATH = 'database/subcategories_data.json'
 
 class GithubStorageService:
     _cached_products = None
     _cache_timestamp = 0
+    _cached_categories = None
+    _categories_timestamp = 0
+    _cached_subcategories = None
+    _subcategories_timestamp = 0
     CACHE_TTL_SECONDS = 30
 
     @classmethod
@@ -34,6 +40,10 @@ class GithubStorageService:
     def clear_cache(cls):
         cls._cached_products = None
         cls._cache_timestamp = 0
+        cls._cached_categories = None
+        cls._categories_timestamp = 0
+        cls._cached_subcategories = None
+        cls._subcategories_timestamp = 0
 
     @classmethod
     def get_products(cls):
@@ -210,6 +220,120 @@ class GithubStorageService:
                 return False, f"GitHub commit failed ({put_resp.status_code})"
         except Exception as e:
             return False, str(e)
+
+    @classmethod
+    def get_categories(cls):
+        now = time.time()
+        if cls._cached_categories is not None and (now - cls._categories_timestamp) < cls.CACHE_TTL_SECONDS:
+            return cls._cached_categories
+
+        token, repo, branch = cls._get_config()
+        if cls.is_configured():
+            try:
+                url = f"https://api.github.com/repos/{repo}/contents/{CATEGORIES_FILE_REL_PATH}?ref={branch}"
+                headers = {'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'Sathik-Vercel-App'}
+                resp = requests.get(url, headers=headers, timeout=6)
+                if resp.status_code == 200:
+                    raw = base64.b64decode(resp.json().get('content', '')).decode('utf-8')
+                    cats = json.loads(raw)
+                    if isinstance(cats, list):
+                        cls._cached_categories = cats
+                        cls._categories_timestamp = now
+                        return cats
+            except Exception as e:
+                print(f"⚠️ GitHub categories read error: {e}")
+
+            try:
+                raw_url = f"https://raw.githubusercontent.com/{repo}/{branch}/{CATEGORIES_FILE_REL_PATH}?t={int(now)}"
+                raw_resp = requests.get(raw_url, headers={'Authorization': f'Bearer {token}', 'User-Agent': 'Sathik-Vercel-App'}, timeout=5)
+                if raw_resp.status_code == 200:
+                    cats = raw_resp.json()
+                    if isinstance(cats, list):
+                        cls._cached_categories = cats
+                        cls._categories_timestamp = now
+                        return cats
+            except Exception as e:
+                pass
+
+        local_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), CATEGORIES_FILE_REL_PATH)
+        if os.path.exists(local_path):
+            try:
+                with open(local_path, 'r', encoding='utf-8') as f:
+                    cats = json.load(f)
+                    if isinstance(cats, list):
+                        cls._cached_categories = cats
+                        cls._categories_timestamp = now
+                        return cats
+            except Exception as e:
+                print(f"⚠️ Local categories read error: {e}")
+        return None
+
+    @classmethod
+    def save_categories(cls, categories_list):
+        cls._cached_categories = categories_list
+        cls._categories_timestamp = time.time()
+        return cls.save_json_file(
+            CATEGORIES_FILE_REL_PATH,
+            categories_list,
+            f"feat(categories): update categories list via admin [{len(categories_list)} categories]"
+        )
+
+    @classmethod
+    def get_subcategories(cls):
+        now = time.time()
+        if cls._cached_subcategories is not None and (now - cls._subcategories_timestamp) < cls.CACHE_TTL_SECONDS:
+            return cls._cached_subcategories
+
+        token, repo, branch = cls._get_config()
+        if cls.is_configured():
+            try:
+                url = f"https://api.github.com/repos/{repo}/contents/{SUBCATEGORIES_FILE_REL_PATH}?ref={branch}"
+                headers = {'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github.v3+json', 'User-Agent': 'Sathik-Vercel-App'}
+                resp = requests.get(url, headers=headers, timeout=6)
+                if resp.status_code == 200:
+                    raw = base64.b64decode(resp.json().get('content', '')).decode('utf-8')
+                    subs = json.loads(raw)
+                    if isinstance(subs, list):
+                        cls._cached_subcategories = subs
+                        cls._subcategories_timestamp = now
+                        return subs
+            except Exception as e:
+                print(f"⚠️ GitHub subcategories read error: {e}")
+
+            try:
+                raw_url = f"https://raw.githubusercontent.com/{repo}/{branch}/{SUBCATEGORIES_FILE_REL_PATH}?t={int(now)}"
+                raw_resp = requests.get(raw_url, headers={'Authorization': f'Bearer {token}', 'User-Agent': 'Sathik-Vercel-App'}, timeout=5)
+                if raw_resp.status_code == 200:
+                    subs = raw_resp.json()
+                    if isinstance(subs, list):
+                        cls._cached_subcategories = subs
+                        cls._subcategories_timestamp = now
+                        return subs
+            except Exception as e:
+                pass
+
+        local_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), SUBCATEGORIES_FILE_REL_PATH)
+        if os.path.exists(local_path):
+            try:
+                with open(local_path, 'r', encoding='utf-8') as f:
+                    subs = json.load(f)
+                    if isinstance(subs, list):
+                        cls._cached_subcategories = subs
+                        cls._subcategories_timestamp = now
+                        return subs
+            except Exception as e:
+                print(f"⚠️ Local subcategories read error: {e}")
+        return None
+
+    @classmethod
+    def save_subcategories(cls, subcategories_list):
+        cls._cached_subcategories = subcategories_list
+        cls._subcategories_timestamp = time.time()
+        return cls.save_json_file(
+            SUBCATEGORIES_FILE_REL_PATH,
+            subcategories_list,
+            f"feat(categories): update subcategories list via admin [{len(subcategories_list)} subcategories]"
+        )
 
     @classmethod
     def upload_image(cls, file_bytes, filename):

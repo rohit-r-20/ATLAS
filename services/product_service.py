@@ -68,7 +68,7 @@ def _save_local_products():
 
 class ProductService:
     @staticmethod
-    def get_all(filter_query=None, sort_field='created_at', sort_order='desc', page=1, limit=12, active_only=True, only_deleted=False):
+    def get_all(filter_query=None, sort_field='created_at', sort_order='desc', page=1, limit=12, active_only=True, only_deleted=False, only_staging=False):
         products = _load_local_products()
         client = get_supabase()
 
@@ -77,6 +77,9 @@ class ProductService:
                 query = client.table('products').select('*', count='exact')
                 if only_deleted:
                     query = query.eq('is_deleted', True)
+                elif only_staging:
+                    query = query.or_('is_deleted.is.null,is_deleted.eq.false')
+                    query = query.or_('is_staging.eq.true,category_slug.eq.,category_slug.is.null,category_slug.eq.staging,category_slug.eq.uncategorized')
                 else:
                     query = query.or_('is_deleted.is.null,is_deleted.eq.false')
                     if active_only:
@@ -126,6 +129,15 @@ class ProductService:
 
         if only_deleted:
             results = [p for p in results if p.get('is_deleted') is True]
+        elif only_staging:
+            results = [
+                p for p in results 
+                if not p.get('is_deleted', False) and (
+                    p.get('is_staging') is True or 
+                    not p.get('category_slug') or 
+                    p.get('category_slug') in ('', 'staging', 'uncategorized')
+                )
+            ]
         else:
             results = [p for p in results if not p.get('is_deleted', False)]
             if active_only:
@@ -427,6 +439,66 @@ class ProductService:
         """Return total count of products in recycle bin."""
         products = _load_local_products()
         return len([p for p in products if p.get('is_deleted') is True])
+
+    @staticmethod
+    def get_staging_count():
+        """Return total count of products in the staging area (uncategorized)."""
+        products = _load_local_products()
+        return len([
+            p for p in products 
+            if not p.get('is_deleted', False) and (
+                p.get('is_staging') is True or 
+                not p.get('category_slug') or 
+                p.get('category_slug') in ('', 'staging', 'uncategorized')
+            )
+        ])
+
+    @staticmethod
+    def move_category_products_to_staging(category_slug):
+        """
+        When a category is deleted, all products in that category are moved to a staging area
+        (uncategorized state). They remain active in the catalogue normally, but do not belong
+        to any specific category.
+        """
+        products = _load_local_products()
+        str_slug = str(category_slug).strip()
+        now = datetime.utcnow().isoformat()
+        moved_count = 0
+
+        client = get_supabase()
+
+        for p in products:
+            if p.get('category_slug') == str_slug or p.get('category_id') == str_slug:
+                p['category_slug'] = ''
+                p['category_id'] = ''
+                p['category_name'] = 'Uncategorized'
+                p['subcategory_slug'] = 'uncategorized'
+                p['subcategory_id'] = ''
+                p['subcategory_name'] = ''
+                p['is_staging'] = True
+                p['updated_at'] = now
+                moved_count += 1
+
+                if client is not None:
+                    try:
+                        p_id = str(p.get('id') or p.get('_id'))
+                        client.table('products').update({
+                            'category_slug': '',
+                            'category_id': '',
+                            'category_name': 'Uncategorized',
+                            'subcategory_slug': 'uncategorized',
+                            'subcategory_id': '',
+                            'subcategory_name': '',
+                            'is_staging': True,
+                            'updated_at': now
+                        }).eq('id', p_id).execute()
+                    except Exception as e:
+                        print(f"ProductService remote staging update note: {e}")
+
+        if moved_count > 0:
+            _save_local_products()
+
+        return moved_count
 
     @staticmethod
     def reorder(order_list):

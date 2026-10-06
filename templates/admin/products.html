@@ -105,20 +105,28 @@
           <button id="save-order-btn" class="btn btn-primary" onclick="saveOrder()" style="background:#16a34a; border-color:#16a34a;">
             💾 Save Order
           </button>
-          <button type="button" class="btn btn-outline" onclick="openDirectCategoryModal()" style="border-color: #0284c7; color: #0284c7; background: #fff; font-weight: 600;">
-            📁 + Add Category
+          <button type="button" class="btn btn-outline" onclick="openCategoryManagerModal()" style="border-color: #0284c7; color: #0284c7; background: #fff; font-weight: 600;">
+            📁 Manage Categories
           </button>
           <button type="button" class="btn btn-primary" onclick="openCreateModal()">+ Add New Product</button>
         {% endif %}
       </div>
     </div>
 
-    <!-- Active vs Recycle Bin Switcher Tabs -->
+    <!-- Active vs Staging vs Recycle Bin Switcher Tabs -->
     <div style="display: flex; gap: 0.6rem; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap;">
       <a href="{{ url_for('admin.products', business=current_business) }}" 
-         class="btn btn-sm {% if current_view != 'recycle_bin' %}btn-primary{% else %}btn-outline{% endif %}" 
+         class="btn btn-sm {% if current_view not in ('recycle_bin', 'staging') %}btn-primary{% else %}btn-outline{% endif %}" 
          style="display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 9999px; padding: 0.45rem 1.1rem; text-decoration: none; font-weight: 600;">
         <span>📦 Active Products</span>
+      </a>
+      <a href="{{ url_for('admin.products', view='staging', business=current_business) }}" 
+         class="btn btn-sm {% if current_view == 'staging' %}btn-primary{% else %}btn-outline{% endif %}" 
+         style="display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 9999px; padding: 0.45rem 1.1rem; text-decoration: none; font-weight: 600; {% if current_view == 'staging' %}background: #d97706; border-color: #d97706; color: #fff;{% else %}color: #d97706; border-color: #fde68a;{% endif %}">
+        <span>🏷️ Staging Area (Uncategorized)</span>
+        <span class="staging-count-badge" style="background: {% if current_view == 'staging' %}rgba(255,255,255,0.28){% else %}#fef3c7{% endif %}; color: {% if current_view == 'staging' %}#fff{% else %}#92400e{% endif %}; padding: 0.1rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700;">
+          {{ staging_count }}
+        </span>
       </a>
       <a href="{{ url_for('admin.products', view='recycle_bin', business=current_business) }}" 
          class="btn btn-sm {% if current_view == 'recycle_bin' %}btn-primary{% else %}btn-outline{% endif %}" 
@@ -200,8 +208,14 @@
                 </span>
               </td>
               <td style="font-size: 0.85rem;">
-                <div><strong>{{ p.category_slug|replace('-', ' ')|title }}</strong></div>
-                <div style="color: var(--text-muted); font-size: 0.75rem;">{{ p.subcategory_slug|replace('-', ' ')|title }}</div>
+                {% if not p.category_slug or p.is_staging or p.category_slug in ('', 'staging', 'uncategorized') %}
+                  <span class="badge" style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:4px; display:inline-flex; align-items:center; gap:0.25rem;">
+                    📦 Staging Area (Uncategorized)
+                  </span>
+                {% else %}
+                  <div><strong>{{ p.category_name or (p.category_slug|replace('-', ' ')|title) }}</strong></div>
+                  <div style="color: var(--text-muted); font-size: 0.75rem;">{{ p.subcategory_name or (p.subcategory_slug|replace('-', ' ')|title) }}</div>
+                {% endif %}
               </td>
               <td>
                 <div>{{ p.brand_name or p.brand_slug|title }}</div>
@@ -300,8 +314,14 @@
                 </span>
               </td>
               <td style="font-size: 0.85rem;">
-                <div><strong>{{ p.category_slug|replace('-', ' ')|title }}</strong></div>
-                <div style="color: var(--text-muted); font-size: 0.75rem;">{{ p.subcategory_slug|replace('-', ' ')|title }}</div>
+                {% if not p.category_slug or p.is_staging or p.category_slug in ('', 'staging', 'uncategorized') %}
+                  <span class="badge" style="background:#fef3c7; color:#92400e; font-size:0.75rem; font-weight:600; padding:0.25rem 0.55rem; border-radius:4px; display:inline-flex; align-items:center; gap:0.25rem;">
+                    📦 Staging Area (Uncategorized)
+                  </span>
+                {% else %}
+                  <div><strong>{{ p.category_name or (p.category_slug|replace('-', ' ')|title) }}</strong></div>
+                  <div style="color: var(--text-muted); font-size: 0.75rem;">{{ p.subcategory_name or (p.subcategory_slug|replace('-', ' ')|title) }}</div>
+                {% endif %}
               </td>
               <td>
                 <div>{{ p.brand_name or p.brand_slug|title }}</div>
@@ -339,7 +359,18 @@
           {% else %}
             <tr>
               <td colspan="9" style="text-align: center; color: var(--primary-500); padding: 3rem;">
-                No active products found in this view. Click <strong>+ Add New Product</strong> above to create one.
+                {% if current_view == 'staging' %}
+                  <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📦</div>
+                  <div style="font-weight: 700; font-size: 1.15rem; color: #1e293b; margin-bottom: 0.25rem;">Staging Area is Empty</div>
+                  <div style="font-size: 0.85rem; color: #64748b; max-width: 420px; margin: 0 auto 1.25rem auto;">
+                    All products are currently assigned to active categories. When a category is deleted, its products will safely move here for reorganization while remaining visible in the catalogue.
+                  </div>
+                  <a href="{{ url_for('admin.products', business=current_business) }}" class="btn btn-sm btn-primary">
+                    ← Return to Active Products
+                  </a>
+                {% else %}
+                  No active products found in this view. Click <strong>+ Add New Product</strong> above to create one.
+                {% endif %}
               </td>
             </tr>
           {% endif %}
@@ -406,9 +437,14 @@
               <div class="form-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
                   <label class="form-label" style="margin-bottom: 0;">Category *</label>
-                  <button type="button" class="btn-text-link" onclick="toggleNewCategoryBox('create')" style="font-size: 0.75rem; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;">
-                    + New Category
-                  </button>
+                  <div style="display: flex; gap: 0.35rem; align-items: center;">
+                    <button type="button" class="btn-text-link" onclick="toggleNewCategoryBox('create')" style="font-size: 0.75rem; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;">
+                      + New Category
+                    </button>
+                    <button type="button" class="btn-text-link" onclick="openCategoryManagerModal(document.getElementById('create-business-slug').value)" style="font-size: 0.75rem; color: #475569; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;" title="Manage or delete categories">
+                      ⚙️ Manage
+                    </button>
+                  </div>
                 </div>
                 <select id="create-category-slug" name="category_slug" class="form-select" onchange="onCategoryChange('create')" required>
                   <!-- Populated dynamically by JS -->
@@ -557,9 +593,14 @@
               <div class="form-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
                   <label class="form-label" style="margin-bottom: 0;">Category *</label>
-                  <button type="button" class="btn-text-link" onclick="toggleNewCategoryBox('edit')" style="font-size: 0.75rem; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;">
-                    + New Category
-                  </button>
+                  <div style="display: flex; gap: 0.35rem; align-items: center;">
+                    <button type="button" class="btn-text-link" onclick="toggleNewCategoryBox('edit')" style="font-size: 0.75rem; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;">
+                      + New Category
+                    </button>
+                    <button type="button" class="btn-text-link" onclick="openCategoryManagerModal(document.getElementById('edit-business-slug').value)" style="font-size: 0.75rem; color: #475569; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;" title="Manage or delete categories">
+                      ⚙️ Manage
+                    </button>
+                  </div>
                 </div>
                 <select id="edit-category-slug" name="category_slug" class="form-select" onchange="onCategoryChange('edit')" required>
                   <!-- Populated dynamically by JS -->
@@ -680,48 +721,90 @@
       </div>
     </div>
 
-    <!-- Direct Category Addition Modal -->
-    <div id="direct-category-modal" class="modal-backdrop">
-      <div class="modal-card" style="max-width: 32rem;">
-        <div class="modal-header">
-          <h3 style="font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; margin: 0;">📁 Add New Category</h3>
-          <button type="button" onclick="closeModal('direct-category-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
-        </div>
-        <div class="modal-body">
-          <form id="direct-category-form" onsubmit="handleDirectCategorySubmit(event)">
-            <p style="font-size: 0.85rem; color: #64748b; margin-top: 0; margin-bottom: 1.15rem; line-height: 1.4;">
-              Create a new category for any business vertical. It will immediately be available when creating products and will reflect in the public catalogue filter.
+    <!-- Category Manager Modal -->
+    <div id="category-manager-modal" class="modal-backdrop">
+      <div class="modal-card" style="max-width: 50rem; max-height: 90vh; display: flex; flex-direction: column;">
+        <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 0.85rem;">
+          <div>
+            <h3 style="font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; margin: 0; color: #1e293b;">
+              📁 Manage Store Categories
+            </h3>
+            <p style="font-size: 0.8rem; color: #64748b; margin: 0.25rem 0 0 0;">
+              Add new categories or delete existing ones. Deleted category items are safely moved to the <strong>Staging Area</strong>.
             </p>
+          </div>
+          <button type="button" onclick="closeModal('category-manager-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color: #64748b;">&times;</button>
+        </div>
 
-            <div class="form-group">
-              <label class="form-label">Store / Business Vertical *</label>
-              <select id="direct-cat-business-slug" name="business_slug" class="form-select" required>
+        <div class="modal-body" style="overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 1.25rem;">
+          <!-- Quick Creator Card -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem;">
+            <div style="font-weight: 700; font-size: 0.875rem; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.35rem;">
+              <span>✨ Add New Category</span>
+            </div>
+            <form id="cat-mgr-add-form" onsubmit="handleCategoryManagerAddSubmit(event)">
+              <div style="display: grid; grid-template-columns: 1fr 1.2fr 1fr auto; gap: 0.6rem; align-items: end;">
+                <div>
+                  <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Store *</label>
+                  <select id="mgr-new-cat-business-slug" class="form-select" style="font-size: 0.85rem; padding: 0.4rem 0.6rem;" required>
+                    {% for b in businesses %}
+                    <option value="{{ b.slug }}" {% if current_business == b.slug %}selected{% endif %}>
+                      {{ b.icon }} {% if b.slug == 'hardware' %}Sathik Hardwares{% elif b.slug == 'plumbing' %}Sathik Traders{% elif b.slug == 'bath-kitchen' %}Sathik Enterprises{% else %}{{ b.name }}{% endif %}
+                    </option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Category Name *</label>
+                  <input type="text" id="mgr-new-cat-name" class="form-input" placeholder="e.g. Roof Waterproofing" style="font-size: 0.85rem; padding: 0.4rem 0.6rem;" required>
+                </div>
+                <div>
+                  <label class="form-label" style="font-size: 0.75rem; margin-bottom: 0.2rem;">Initial Element (Optional)</label>
+                  <input type="text" id="mgr-new-cat-subcat" class="form-input" placeholder="e.g. Liquid Polymers" style="font-size: 0.85rem; padding: 0.4rem 0.6rem;">
+                </div>
+                <div>
+                  <button type="submit" id="mgr-new-cat-btn" class="btn btn-primary btn-sm" style="background: #16a34a; border-color: #16a34a; padding: 0.45rem 0.95rem; font-weight: 600; white-space: nowrap;">
+                    + Add Category
+                  </button>
+                </div>
+              </div>
+              <div id="mgr-new-cat-status" style="font-size: 0.8rem; margin-top: 0.5rem; display: none;"></div>
+            </form>
+          </div>
+
+          <!-- Store Tabs Filter for Existing Categories -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
+              <div style="font-weight: 700; font-size: 0.875rem; color: #0f172a;">
+                📋 Existing Categories
+              </div>
+              <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-sm cat-mgr-store-tab" data-biz="all" onclick="setCategoryManagerStoreFilter('all')" style="font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">
+                  All Stores
+                </button>
                 {% for b in businesses %}
-                <option value="{{ b.slug }}" {% if current_business == b.slug %}selected{% endif %}>
-                  {{ b.icon }} {% if b.slug == 'hardware' %}Sathik Hardwares{% elif b.slug == 'plumbing' %}Sathik Traders{% elif b.slug == 'bath-kitchen' %}Sathik Enterprises{% else %}{{ b.name }}{% endif %}
-                </option>
+                <button type="button" class="btn btn-sm cat-mgr-store-tab" data-biz="{{ b.slug }}" onclick="setCategoryManagerStoreFilter('{{ b.slug }}')" style="font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 9999px;">
+                  {{ b.icon }} {% if b.slug == 'hardware' %}Hardwares{% elif b.slug == 'plumbing' %}Traders{% elif b.slug == 'bath-kitchen' %}Enterprises{% else %}{{ b.name }}{% endif %}
+                </button>
                 {% endfor %}
-              </select>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Category Name *</label>
-              <input type="text" id="direct-cat-name" name="name" class="form-input" placeholder="e.g. Waterproofing & Chemical Solutions" required>
-            </div>
+            <!-- Global Action / Deletion Status Notification -->
+            <div id="cat-mgr-action-status" style="font-size: 0.82rem; margin-bottom: 0.6rem; display: none; padding: 0.45rem 0.75rem; border-radius: 6px;"></div>
 
-            <div class="form-group">
-              <label class="form-label">Initial Element / Subcategory (Optional)</label>
-              <input type="text" id="direct-subcat-name" name="first_subcategory_name" class="form-input" placeholder="e.g. Liquid Membranes (defaults to General if empty)">
-              <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem;">Products within this category can be assigned to this element or you can add more elements anytime.</div>
+            <!-- Categories Dynamic Container -->
+            <div id="cat-mgr-list" style="max-height: 42vh; overflow-y: auto; padding-right: 0.25rem;">
+              <!-- Populated dynamically via JS -->
             </div>
+          </div>
+        </div>
 
-            <div id="direct-cat-status" style="font-size: 0.85rem; margin-bottom: 0.75rem; display: none;"></div>
-
-            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.25rem;">
-              <button type="button" class="btn btn-outline" onclick="closeModal('direct-category-modal')">Cancel</button>
-              <button type="submit" id="direct-cat-submit-btn" class="btn btn-primary" style="background: #16a34a; border-color: #16a34a;">Save Category</button>
-            </div>
-          </form>
+        <div class="modal-footer" style="border-top: 1px solid #e2e8f0; padding: 0.85rem 1.25rem; display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
+          <div style="font-size: 0.75rem; color: #64748b;">
+            💡 Deleting a category moves its products to the Staging Area; they remain visible in your catalogue.
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal('category-manager-modal')">Close</button>
         </div>
       </div>
     </div>
@@ -745,13 +828,13 @@
 {% block extra_js %}
 <script>
   // Structured taxonomy for seamless store -> category -> subcategory chaining
-  const STORE_CATEGORIES = [
+  let STORE_CATEGORIES = [
     {% for c in categories %}
     { name: {{ c.name|tojson }}, slug: {{ c.slug|tojson }}, business_slug: {{ c.business_slug|tojson }} },
     {% endfor %}
   ];
 
-  const STORE_SUBCATEGORIES = [
+  let STORE_SUBCATEGORIES = [
     {% for s in subcategories %}
     { name: {{ s.name|tojson }}, slug: {{ s.slug|tojson }}, category_slug: {{ s.category_slug|tojson }}, business_slug: {{ s.business_slug|tojson }} },
     {% endfor %}
@@ -774,6 +857,17 @@
     const filteredCats = STORE_CATEGORIES.filter(c => c.business_slug === selectedBiz);
 
     catSelect.innerHTML = '';
+
+    // Staging / Uncategorized Option
+    const stagingOpt = document.createElement('option');
+    stagingOpt.value = '';
+    stagingOpt.textContent = '📦 Staging Area (Uncategorized)';
+    stagingOpt.style.color = '#d97706';
+    if (!targetCategorySlug) {
+      stagingOpt.selected = true;
+    }
+    catSelect.appendChild(stagingOpt);
+
     filteredCats.forEach(c => {
       const opt = document.createElement('option');
       opt.value = c.slug;
@@ -792,9 +886,9 @@
     addNewOpt.style.color = '#0284c7';
     catSelect.appendChild(addNewOpt);
 
-    if (targetCategorySlug && targetCategorySlug !== '__new__') {
+    if (targetCategorySlug !== undefined && targetCategorySlug !== '__new__') {
       catSelect.value = targetCategorySlug;
-    } else if (!catSelect.value && filteredCats.length > 0) {
+    } else if (!targetCategorySlug && mode === 'create' && filteredCats.length > 0) {
       catSelect.value = filteredCats[0].slug;
     }
 
@@ -815,6 +909,16 @@
 
     const selectedCat = catSelect.value;
     subSelect.innerHTML = '';
+
+    if (!selectedCat || selectedCat === '') {
+      const uncategorizedSubOpt = document.createElement('option');
+      uncategorizedSubOpt.value = 'uncategorized';
+      uncategorizedSubOpt.textContent = 'Uncategorized';
+      uncategorizedSubOpt.selected = true;
+      subSelect.appendChild(uncategorizedSubOpt);
+      toggleNewSubcategoryBox(mode, false);
+      return;
+    }
 
     if (selectedCat && selectedCat !== '__new__') {
       const filteredSubs = STORE_SUBCATEGORIES.filter(s => s.category_slug === selectedCat);
@@ -935,15 +1039,38 @@
     })
     .then(r => r.json())
     .then(data => {
-      if (data.ok && data.category) {
-        if (!STORE_CATEGORIES.some(c => c.slug === data.category.slug && c.business_slug === data.category.business_slug)) {
+      if ((data.ok || data.success) && data.category) {
+        const existingIdx = STORE_CATEGORIES.findIndex(c => c.slug === data.category.slug && c.business_slug === data.category.business_slug);
+        if (existingIdx >= 0) {
+          STORE_CATEGORIES[existingIdx] = data.category;
+        } else {
           STORE_CATEGORIES.push(data.category);
         }
-        if (data.subcategory && !STORE_SUBCATEGORIES.some(s => s.slug === data.subcategory.slug && s.category_slug === data.subcategory.category_slug)) {
-          STORE_SUBCATEGORIES.push(data.subcategory);
+
+        if (data.subcategories && Array.isArray(data.subcategories)) {
+          data.subcategories.forEach(sub => {
+            if (!STORE_SUBCATEGORIES.some(s => s.slug === sub.slug && s.category_slug === sub.category_slug)) {
+              STORE_SUBCATEGORIES.push(sub);
+            }
+          });
+        } else if (data.subcategory) {
+          if (!STORE_SUBCATEGORIES.some(s => s.slug === data.subcategory.slug && s.category_slug === data.subcategory.category_slug)) {
+            STORE_SUBCATEGORIES.push(data.subcategory);
+          }
+        }
+
+        // Ensure business select matches the category
+        if (bizSelect && data.category.business_slug && bizSelect.value !== data.category.business_slug) {
+          bizSelect.value = data.category.business_slug;
         }
 
         populateCategories(mode, data.category.slug, data.subcategory ? data.subcategory.slug : null);
+        const catSelect = document.getElementById(mode + '-category-slug');
+        if (catSelect) {
+          catSelect.value = data.category.slug;
+          populateSubcategories(mode, data.subcategory ? data.subcategory.slug : null);
+        }
+
         input.value = '';
 
         if (statusEl) {
@@ -952,16 +1079,20 @@
           setTimeout(() => {
             toggleNewCategoryBox(mode, false);
             statusEl.style.display = 'none';
-          }, 1000);
+          }, 1200);
         } else {
           toggleNewCategoryBox(mode, false);
+        }
+
+        if (typeof renderCategoryManagerList === 'function') {
+          renderCategoryManagerList();
         }
       } else {
         if (statusEl) {
           statusEl.style.color = '#dc2626';
-          statusEl.textContent = '❌ ' + (data.error || 'Failed to add category');
+          statusEl.textContent = '❌ ' + (data.error || data.message || 'Failed to add category');
         } else {
-          alert('Error: ' + (data.error || 'Failed to add category'));
+          alert('Error: ' + (data.error || data.message || 'Failed to add category'));
         }
       }
     })
@@ -1078,25 +1209,257 @@
     });
   }
 
-  /* ── Direct Category Modal Handlers ── */
-  function openDirectCategoryModal() {
-    const form = document.getElementById('direct-category-form');
-    if (form) form.reset();
-    const statusEl = document.getElementById('direct-cat-status');
-    if (statusEl) {
-      statusEl.style.display = 'none';
-      statusEl.textContent = '';
+  /* ── Category Manager Modal Handlers ── */
+  let currentCatMgrStoreFilter = 'all';
+  let catMgrCategoriesData = [];
+  let catMgrSubcategoriesData = [];
+
+  function openCategoryManagerModal(bizSlug) {
+    const addForm = document.getElementById('cat-mgr-add-form');
+    if (addForm) addForm.reset();
+
+    const addStatus = document.getElementById('mgr-new-cat-status');
+    if (addStatus) {
+      addStatus.style.display = 'none';
+      addStatus.textContent = '';
     }
-    openModal('direct-category-modal');
+
+    const actionStatus = document.getElementById('cat-mgr-action-status');
+    if (actionStatus) {
+      actionStatus.style.display = 'none';
+      actionStatus.textContent = '';
+    }
+
+    if (bizSlug) {
+      const bizSelect = document.getElementById('mgr-new-cat-business-slug');
+      if (bizSelect) bizSelect.value = bizSlug;
+    }
+
+    setCategoryManagerStoreFilter(bizSlug || 'all');
+    openModal('category-manager-modal');
+    loadCategoryManagerData();
   }
 
-  function handleDirectCategorySubmit(e) {
+  // Alias for backward compatibility
+  function openDirectCategoryModal(bizSlug) {
+    openCategoryManagerModal(bizSlug);
+  }
+
+  function setCategoryManagerStoreFilter(bizSlug) {
+    currentCatMgrStoreFilter = bizSlug || 'all';
+
+    // Update active tab button styles
+    const tabs = document.querySelectorAll('.cat-mgr-store-tab');
+    tabs.forEach(tab => {
+      const tabBiz = tab.getAttribute('data-biz');
+      if (tabBiz === currentCatMgrStoreFilter) {
+        tab.style.background = '#0284c7';
+        tab.style.color = '#ffffff';
+        tab.style.borderColor = '#0284c7';
+        tab.style.fontWeight = '600';
+      } else {
+        tab.style.background = '#f1f5f9';
+        tab.style.color = '#475569';
+        tab.style.border = '1px solid #e2e8f0';
+        tab.style.fontWeight = 'normal';
+      }
+    });
+
+    renderCategoryManagerList();
+  }
+
+  function loadCategoryManagerData() {
+    const listContainer = document.getElementById('cat-mgr-list');
+    if (listContainer && (!catMgrCategoriesData || catMgrCategoriesData.length === 0)) {
+      listContainer.innerHTML = '<div style="padding: 1.5rem; text-align: center; color: #94a3b8; font-size: 0.85rem;">⏳ Loading categories...</div>';
+    }
+
+    fetch('/admin/categories/json')
+      .then(r => r.json())
+      .then(data => {
+        if (data.ok || data.success) {
+          catMgrCategoriesData = data.categories || [];
+          catMgrSubcategoriesData = data.subcategories || [];
+
+          // Keep STORE_CATEGORIES & STORE_SUBCATEGORIES in sync for create/edit product forms
+          STORE_CATEGORIES.length = 0;
+          catMgrCategoriesData.forEach(c => {
+            STORE_CATEGORIES.push({ name: c.name, slug: c.slug, business_slug: c.business_slug });
+          });
+
+          STORE_SUBCATEGORIES.length = 0;
+          catMgrSubcategoriesData.forEach(s => {
+            STORE_SUBCATEGORIES.push({ name: s.name, slug: s.slug, category_slug: s.category_slug, business_slug: s.business_slug });
+          });
+
+          // Sync staging badge on top navigation
+          if (data.staging_count !== undefined) {
+            document.querySelectorAll('.staging-count-badge').forEach(b => {
+              b.textContent = data.staging_count;
+            });
+          }
+
+          renderCategoryManagerList();
+        } else {
+          if (listContainer) {
+            listContainer.innerHTML = '<div style="padding: 1rem; color: #dc2626; text-align: center;">Failed to load categories.</div>';
+          }
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching categories:', err);
+        if (listContainer) {
+          listContainer.innerHTML = '<div style="padding: 1rem; color: #dc2626; text-align: center;">Network error loading categories.</div>';
+        }
+      });
+  }
+
+  function renderCategoryManagerList() {
+    const listContainer = document.getElementById('cat-mgr-list');
+    if (!listContainer) return;
+
+    const filtered = (currentCatMgrStoreFilter === 'all')
+      ? catMgrCategoriesData
+      : catMgrCategoriesData.filter(c => c.business_slug === currentCatMgrStoreFilter);
+
+    if (filtered.length === 0) {
+      listContainer.innerHTML = `
+        <div style="padding: 2rem 1rem; text-align: center; background: #fff; border: 1px dashed #cbd5e1; border-radius: 8px; color: #64748b; font-size: 0.85rem;">
+          📭 No categories found ${currentCatMgrStoreFilter !== 'all' ? 'for this store' : ''}. Use the form above to add a new category!
+        </div>
+      `;
+      return;
+    }
+
+    const businessNames = {
+      'hardware': '🔨 Sathik Hardwares',
+      'plumbing': '🚰 Sathik Traders',
+      'bath-kitchen': '🛁 Sathik Enterprises'
+    };
+
+    let html = '<div style="display: flex; flex-direction: column; gap: 0.6rem;">';
+
+    filtered.forEach(cat => {
+      const catSubs = catMgrSubcategoriesData.filter(s => s.category_slug === cat.slug);
+      const prodCount = cat.product_count || 0;
+      const bizLabel = businessNames[cat.business_slug] || cat.business_slug;
+
+      const subTags = catSubs.map(s => `
+        <span style="display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.72rem; background: #f1f5f9; color: #334155; padding: 0.15rem 0.5rem; border-radius: 4px; border: 1px solid #e2e8f0;">
+          ${s.name}
+        </span>
+      `).join('');
+
+      html += `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0.9rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; gap: 0.75rem; transition: border-color 0.15s ease;">
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <span style="font-weight: 700; font-size: 0.88rem; color: #0f172a;">${cat.name}</span>
+              <span style="font-size: 0.7rem; color: #0284c7; background: #e0f2fe; padding: 0.1rem 0.45rem; border-radius: 9999px; font-weight: 600;">
+                ${bizLabel}
+              </span>
+              <span style="font-size: 0.7rem; color: #475569; background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.1rem 0.45rem; border-radius: 9999px;">
+                ${prodCount} product${prodCount === 1 ? '' : 's'}
+              </span>
+            </div>
+            ${catSubs.length > 0 ? `
+              <div style="display: flex; flex-wrap: gap: 0.3rem; margin-top: 0.4rem;">
+                <span style="font-size: 0.7rem; color: #94a3b8; align-self: center;">Elements:</span>
+                ${subTags}
+              </div>
+            ` : '<div style="font-size: 0.72rem; color: #94a3b8; margin-top: 0.25rem;">No sub-elements</div>'}
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0;">
+            <button type="button" 
+                    onclick="confirmDeleteCategory('${cat.slug}', '${cat.name.replace(/'/g, "\\'")}', ${prodCount})" 
+                    class="btn btn-sm" 
+                    style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; padding: 0.3rem 0.65rem; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; cursor: pointer; font-weight: 600;"
+                    title="Delete category (moves items to Staging Area)">
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += '</div>';
+    listContainer.innerHTML = html;
+  }
+
+  function confirmDeleteCategory(catSlug, catName, prodCount) {
+    const warningText = prodCount > 0
+      ? `Are you sure you want to delete category "${catName}"?\n\n⚠️ ${prodCount} product(s) in this category will NOT be deleted. They will be safely moved to the Staging Area (Uncategorized) and will continue to appear in your catalogue.\n\nProceed?`
+      : `Are you sure you want to delete category "${catName}"?\n\nThis action cannot be undone.\n\nProceed?`;
+
+    if (!confirm(warningText)) return;
+
+    const actionStatus = document.getElementById('cat-mgr-action-status');
+    if (actionStatus) {
+      actionStatus.style.display = 'block';
+      actionStatus.style.background = '#e0f2fe';
+      actionStatus.style.color = '#0369a1';
+      actionStatus.style.border = '1px solid #bae6fd';
+      actionStatus.textContent = `⏳ Deleting "${catName}" and relocating products...`;
+    }
+
+    fetch('/admin/categories/' + encodeURIComponent(catSlug) + '/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok || data.success) {
+        if (actionStatus) {
+          actionStatus.style.display = 'block';
+          actionStatus.style.background = '#dcfce7';
+          actionStatus.style.color = '#15803d';
+          actionStatus.style.border = '1px solid #bbf7d0';
+          const movedMsg = (data.moved_count !== undefined) 
+            ? ` (${data.moved_count} product(s) moved to Staging Area)` 
+            : '';
+          actionStatus.textContent = `✅ Category "${catName}" deleted successfully${movedMsg}.`;
+        }
+
+        // Refresh category manager data
+        loadCategoryManagerData();
+
+        // Repopulate create and edit forms
+        populateCategories('create');
+        populateCategories('edit');
+      } else {
+        if (actionStatus) {
+          actionStatus.style.display = 'block';
+          actionStatus.style.background = '#fee2e2';
+          actionStatus.style.color = '#b91c1c';
+          actionStatus.style.border = '1px solid #fecaca';
+          actionStatus.textContent = '❌ ' + (data.message || data.error || 'Failed to delete category');
+        } else {
+          alert('Error: ' + (data.message || data.error || 'Failed to delete category'));
+        }
+      }
+    })
+    .catch(err => {
+      console.error('Delete error:', err);
+      if (actionStatus) {
+        actionStatus.style.display = 'block';
+        actionStatus.style.background = '#fee2e2';
+        actionStatus.style.color = '#b91c1c';
+        actionStatus.style.border = '1px solid #fecaca';
+        actionStatus.textContent = '❌ Network error during category deletion.';
+      }
+    });
+  }
+
+  function handleCategoryManagerAddSubmit(e) {
     e.preventDefault();
-    const bizSelect = document.getElementById('direct-cat-business-slug');
-    const nameInput = document.getElementById('direct-cat-name');
-    const subcatInput = document.getElementById('direct-subcat-name');
-    const statusEl = document.getElementById('direct-cat-status');
-    const submitBtn = document.getElementById('direct-cat-submit-btn');
+    const bizSelect = document.getElementById('mgr-new-cat-business-slug');
+    const nameInput = document.getElementById('mgr-new-cat-name');
+    const subcatInput = document.getElementById('mgr-new-cat-subcat');
+    const statusEl = document.getElementById('mgr-new-cat-status');
+    const submitBtn = document.getElementById('mgr-new-cat-btn');
 
     const businessSlug = bizSelect.value;
     const catName = nameInput.value.trim();
@@ -1104,6 +1467,7 @@
 
     if (!catName) {
       alert('Please enter a category name');
+      nameInput.focus();
       return;
     }
 
@@ -1111,7 +1475,7 @@
     if (statusEl) {
       statusEl.style.display = 'block';
       statusEl.style.color = '#0284c7';
-      statusEl.textContent = '⏳ Saving category...';
+      statusEl.textContent = '⏳ Creating category...';
     }
 
     fetch('/admin/categories/create', {
@@ -1130,6 +1494,18 @@
     .then(data => {
       if (submitBtn) submitBtn.disabled = false;
       if (data.ok && data.category) {
+        nameInput.value = '';
+        subcatInput.value = '';
+
+        if (statusEl) {
+          statusEl.style.color = '#16a34a';
+          statusEl.textContent = '✅ Category "' + data.category.name + '" added successfully!';
+          setTimeout(() => {
+            statusEl.style.display = 'none';
+          }, 3000);
+        }
+
+        // Add to STORE_CATEGORIES & STORE_SUBCATEGORIES
         if (!STORE_CATEGORIES.some(c => c.slug === data.category.slug && c.business_slug === data.category.business_slug)) {
           STORE_CATEGORIES.push(data.category);
         }
@@ -1137,17 +1513,17 @@
           STORE_SUBCATEGORIES.push(data.subcategory);
         }
 
-        // Repopulate create and edit modals
-        populateCategories('create', data.category.slug, data.subcategory ? data.subcategory.slug : null);
-
-        if (statusEl) {
-          statusEl.style.color = '#16a34a';
-          statusEl.textContent = '✅ Category "' + data.category.name + '" added successfully!';
+        // If the create product modal is open, ensure the business is selected and new category is chosen!
+        const createBiz = document.getElementById('create-business-slug');
+        if (createBiz && createBiz.value === businessSlug) {
+          populateCategories('create', data.category.slug, data.subcategory ? data.subcategory.slug : null);
+        } else if (createBiz) {
+          createBiz.value = businessSlug;
+          populateCategories('create', data.category.slug, data.subcategory ? data.subcategory.slug : null);
         }
 
-        setTimeout(() => {
-          closeModal('direct-category-modal');
-        }, 1000);
+        // Refresh category manager data & UI
+        loadCategoryManagerData();
       } else {
         if (statusEl) {
           statusEl.style.color = '#dc2626';

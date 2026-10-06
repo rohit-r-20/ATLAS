@@ -100,8 +100,13 @@ def product_list():
 
 
 @product_bp.route('/products/<subcategory_slug>/<product_slug>')
-def product_detail(subcategory_slug, product_slug):
+@product_bp.route('/products/<product_slug>')
+@product_bp.route('/product/<product_slug>')
+def product_detail(product_slug, subcategory_slug='uncategorized'):
     product = ProductModel.find_by_slug(subcategory_slug, product_slug)
+    if not product:
+        # Also try searching by product_slug if first argument was interpreted as product_slug
+        product = ProductModel.find_by_id(product_slug) or ProductModel.find_by_slug('', product_slug)
     if not product:
         abort(404)
 

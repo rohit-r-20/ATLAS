@@ -2,7 +2,7 @@ from services.product_service import ProductService
 
 class ProductModel:
     @classmethod
-    def find_all(cls, filter_query=None, sort_field='created_at', sort_order=-1, page=1, limit=12, active_only=True, only_deleted=False):
+    def find_all(cls, filter_query=None, sort_field='created_at', sort_order=-1, page=1, limit=12, active_only=True, only_deleted=False, only_staging=False):
         s_order = 'desc' if sort_order in (-1, 'desc', 'DESC') else 'asc'
         return ProductService.get_all(
             filter_query=filter_query, 
@@ -11,7 +11,8 @@ class ProductModel:
             page=page, 
             limit=limit, 
             active_only=active_only,
-            only_deleted=only_deleted
+            only_deleted=only_deleted,
+            only_staging=only_staging
         )
 
     @classmethod
@@ -53,6 +54,14 @@ class ProductModel:
     @classmethod
     def get_recycle_bin_count(cls):
         return ProductService.get_recycle_bin_count()
+
+    @classmethod
+    def get_staging_count(cls):
+        return ProductService.get_staging_count()
+
+    @classmethod
+    def move_category_products_to_staging(cls, category_slug):
+        return ProductService.move_category_products_to_staging(category_slug)
 
     @classmethod
     def reorder(cls, order_list):

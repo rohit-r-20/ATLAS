@@ -13,6 +13,10 @@ class CategoryModel:
     def create(cls, data):
         return CategoryService.create(data)
 
+    @classmethod
+    def delete(cls, category_slug):
+        return CategoryService.delete(category_slug)
+
 class SubcategoryModel:
     @classmethod
     def find_by_category(cls, category_id):
@@ -25,3 +29,7 @@ class SubcategoryModel:
     @classmethod
     def create(cls, data):
         return SubcategoryService.create(data)
+
+    @classmethod
+    def delete(cls, subcategory_slug):
+        return SubcategoryService.delete(subcategory_slug)

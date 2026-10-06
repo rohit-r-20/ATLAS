@@ -97,12 +97,20 @@ def products():
     if business_filter:
         filter_query['business_slug'] = business_filter
 
-    limit = 50 if view == 'recycle_bin' else 20
+    limit = 50 if view in ('recycle_bin', 'staging') else 20
 
     if view == 'recycle_bin':
         products_list, total = ProductModel.find_all(
             filter_query=filter_query if business_filter else None,
             only_deleted=True,
+            limit=limit,
+            page=page,
+            active_only=False
+        )
+    elif view == 'staging':
+        products_list, total = ProductModel.find_all(
+            filter_query=filter_query if business_filter else None,
+            only_staging=True,
             limit=limit,
             page=page,
             active_only=False
@@ -117,6 +125,7 @@ def products():
         )
 
     recycle_bin_count = ProductModel.get_recycle_bin_count()
+    staging_count = ProductModel.get_staging_count()
     categories = CategoryModel.find_all()
     from services.category_service import SubcategoryService
     subcategories = SubcategoryService.get_all()
@@ -137,6 +146,7 @@ def products():
         current_business=business_filter,
         current_view=view,
         recycle_bin_count=recycle_bin_count,
+        staging_count=staging_count,
         page=page,
         total_pages=total_pages,
         storage_connected=storage_connected
@@ -890,7 +900,85 @@ def create_subcategory():
     except Exception as e:
         current_app.logger.error(f"Error creating subcategory: {e}", exc_info=True)
         if request.is_json:
-            return jsonify({'success': False, 'message': str(e)}), 500
+            return jsonify({'ok': False, 'success': False, 'message': str(e), 'error': str(e)}), 500
         flash(f'Error creating element: {e}', 'danger')
         return redirect(url_for('admin.products'))
+
+@admin_bp.route('/categories/<category_slug>/delete', methods=['POST'])
+@admin_required
+def delete_category(category_slug):
+    try:
+        from services.category_service import CategoryService
+        result = CategoryService.delete(category_slug)
+        if not result or not result.get('success'):
+            msg = (result.get('message') if result else None) or 'Failed to delete category'
+            if request.is_json:
+                return jsonify({'ok': False, 'success': False, 'message': msg, 'error': msg}), 400
+            flash(msg, 'danger')
+            return redirect(url_for('admin.products'))
+
+        if request.is_json:
+            return jsonify({
+                'ok': True,
+                'success': True,
+                'moved_count': result.get('moved_count', 0),
+                'category': result.get('category'),
+                'message': result.get('message')
+            })
+
+        flash(result.get('message'), 'success')
+        return redirect(url_for('admin.products'))
+    except Exception as e:
+        current_app.logger.error(f"Error deleting category {category_slug}: {e}", exc_info=True)
+        if request.is_json:
+            return jsonify({'ok': False, 'success': False, 'message': str(e), 'error': str(e)}), 500
+        flash(f'Error deleting category: {e}', 'danger')
+        return redirect(url_for('admin.products'))
+
+@admin_bp.route('/subcategories/<subcategory_slug>/delete', methods=['POST'])
+@admin_required
+def delete_subcategory(subcategory_slug):
+    try:
+        from services.category_service import SubcategoryService
+        result = SubcategoryService.delete(subcategory_slug)
+        if not result or not result.get('success'):
+            msg = (result.get('message') if result else None) or 'Failed to delete element'
+            if request.is_json:
+                return jsonify({'ok': False, 'success': False, 'message': msg, 'error': msg}), 400
+            flash(msg, 'danger')
+            return redirect(url_for('admin.products'))
+
+        if request.is_json:
+            return jsonify({'ok': True, 'success': True, 'subcategory': result.get('subcategory'), 'message': 'Element deleted successfully!'})
+
+        flash('Element deleted successfully!', 'success')
+        return redirect(url_for('admin.products'))
+    except Exception as e:
+        current_app.logger.error(f"Error deleting subcategory {subcategory_slug}: {e}", exc_info=True)
+        if request.is_json:
+            return jsonify({'ok': False, 'success': False, 'message': str(e), 'error': str(e)}), 500
+        flash(f'Error deleting element: {e}', 'danger')
+        return redirect(url_for('admin.products'))
+
+@admin_bp.route('/categories/json', methods=['GET'])
+@admin_required
+def categories_json():
+    from services.category_service import CategoryService, SubcategoryService
+    from services.product_service import ProductService
+    cats = CategoryService.get_all()
+    subs = SubcategoryService.get_all()
+    prods, _ = ProductService.get_all(limit=1000, active_only=False)
+
+    # Attach product counts to categories
+    for c in cats:
+        c_slug = c.get('slug')
+        c['product_count'] = len([p for p in prods if (p.get('category_slug') == c_slug or p.get('category_id') == c_slug) and not p.get('is_deleted', False)])
+
+    return jsonify({
+        'ok': True,
+        'success': True,
+        'categories': cats,
+        'subcategories': subs,
+        'staging_count': ProductService.get_staging_count()
+    })
 
