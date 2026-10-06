@@ -1,5 +1,53 @@
 [
   {
+    "id": "qt_1791266214510",
+    "_id": "qt_1791266214510",
+    "quote_ref": "#QT-1003",
+    "reference_id": "#QT-1003",
+    "customer_name": "Abdul Samad",
+    "name": "Abdul Samad",
+    "mobile_number": "9841437087",
+    "phone": "9841437087",
+    "email": "",
+    "city": "Redhills",
+    "address": "Redhills",
+    "quote_type": "quote_list",
+    "product_name": "Multiple Products Quote List",
+    "product_sku": "",
+    "quantity": "",
+    "items": [
+      {
+        "name": "Hinges",
+        "sku": "HDW-HNG-SS",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/hinges_common.jpg",
+        "brand": ""
+      },
+      {
+        "name": "Tower Bolts",
+        "sku": "HDW-TBL-BR",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/tower_bolts_common.jpg",
+        "brand": ""
+      },
+      {
+        "name": "Altraps",
+        "sku": "HDW-ALT-HD",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/altraps_common.jpg",
+        "brand": ""
+      }
+    ],
+    "item_count": 3,
+    "message": "Hi, please send a price quote and availability details for the following products:\r\n- Hinges (SKU: HDW-HNG-SS)\r\n- Tower Bolts (SKU: HDW-TBL-BR)\r\n- Altraps (SKU: HDW-ALT-HD)\r\n\r\nThank you!",
+    "whatsapp_url": "https://api.whatsapp.com/send?phone=919840637307&text=%F0%9F%93%A6%20%2ANEW%20QUOTE%20REQUEST%20-%20SATHIK%20%2A%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%F0%9F%91%A4%20%2ACustomer%3A%2A%20Abdul%20Samad%0A%F0%9F%93%B1%20%2APhone%3A%2A%209841437087%0A%F0%9F%93%8D%20%2ALocation%3A%2A%20Redhills%0A%F0%9F%8F%A2%20%2AVertical%20/%20Category%3A%2A%20Multiple%20Showrooms%0A%F0%9F%8F%B7%EF%B8%8F%20%2AProduct%20/%20Items%3A%2A%20Multiple%20Products%20Quote%20List%0A%F0%9F%92%AC%20%2APreferred%20Contact%3A%2A%20WhatsApp%20Message%0A%F0%9F%93%9D%20%2ADetails%20/%20Requirements%3A%2A%0AHi%2C%20please%20send%20a%20price%20quote%20and%20availability%20details%20for%20the%20following%20products%3A%0D%0A-%20Hinges%20%28SKU%3A%20HDW-HNG-SS%29%0D%0A-%20Tower%20Bolts%20%28SKU%3A%20HDW-TBL-BR%29%0D%0A-%20Altraps%20%28SKU%3A%20HDW-ALT-HD%29%0D%0A%0D%0AThank%20you%21%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%E2%8F%B1%EF%B8%8F%20%2ATime%3A%2A%2006-Oct-2026%2005%3A56%20AM%0A%F0%9F%8C%90%20%2ASource%3A%2A%20Sathik%20Groups%20Web%20Platform%20%28sathikgroups.com%29",
+    "preferred_contact": "WhatsApp Message",
+    "status": "New",
+    "notes": "",
+    "admin_notes": "",
+    "created_at": "2026-10-06T05:56:54.510406+00:00"
+  },
+  {
     "id": "qt_1790519455468",
     "_id": "qt_1790519455468",
     "quote_ref": "#QT-1002",
@@ -31,7 +79,25 @@
     "status": "New",
     "notes": "",
     "admin_notes": "",
-    "created_at": "2026-09-27T14:30:55.468519+00:00"
+    "created_at": "2026-09-27T14:30:55.468519+00:00",
+    "quote_items": [
+      {
+        "name": "Locks",
+        "sku": "HDW-LCK-ALL",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/locks_common.jpg",
+        "brand": ""
+      }
+    ],
+    "item_list": [
+      {
+        "name": "Locks",
+        "sku": "HDW-LCK-ALL",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/locks_common.jpg",
+        "brand": ""
+      }
+    ]
   },
   {
     "id": "qt_1790497855243",
