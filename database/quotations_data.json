@@ -1,5 +1,39 @@
 [
   {
+    "id": "qt_1791344967050",
+    "_id": "qt_1791344967050",
+    "quote_ref": "#QT-1004",
+    "reference_id": "#QT-1004",
+    "customer_name": "R.S.G. Kannan Nadar Bjp Redhills",
+    "name": "R.S.G. Kannan Nadar Bjp Redhills",
+    "mobile_number": "+919884871312",
+    "phone": "+919884871312",
+    "email": "rsgkannan91495@gmail.com",
+    "city": "Redhills",
+    "address": "Redhills",
+    "quote_type": "general",
+    "product_name": "Cpvc pipes and air compressor pipes",
+    "product_sku": "",
+    "quantity": "",
+    "items": [
+      {
+        "name": "Cpvc pipes and air compressor pipes",
+        "sku": "",
+        "quantity": "1",
+        "image": "",
+        "brand": ""
+      }
+    ],
+    "item_count": 1,
+    "message": "",
+    "whatsapp_url": "https://api.whatsapp.com/send?phone=919840637307&text=%F0%9F%93%A6%20%2ANEW%20QUOTE%20REQUEST%20-%20SATHIK%20%2A%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%F0%9F%91%A4%20%2ACustomer%3A%2A%20R.S.G.%20Kannan%20Nadar%20Bjp%20Redhills%0A%F0%9F%93%B1%20%2APhone%3A%2A%20%2B919884871312%0A%E2%9C%89%EF%B8%8F%20%2AEmail%3A%2A%20rsgkannan91495%40gmail.com%0A%F0%9F%93%8D%20%2ALocation%3A%2A%20Redhills%0A%F0%9F%8F%B7%EF%B8%8F%20%2AProduct%20/%20Items%3A%2A%20Cpvc%20pipes%20and%20air%20compressor%20pipes%0A%F0%9F%92%AC%20%2APreferred%20Contact%3A%2A%20WhatsApp%20Message%0A%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%E2%94%81%0A%E2%8F%B1%EF%B8%8F%20%2ATime%3A%2A%2007-Oct-2026%2003%3A49%20AM%0A%F0%9F%8C%90%20%2ASource%3A%2A%20Sathik%20Groups%20Web%20Platform%20%28sathikgroups.com%29",
+    "preferred_contact": "WhatsApp Message",
+    "status": "New",
+    "notes": "",
+    "admin_notes": "",
+    "created_at": "2026-10-07T03:49:27.050495+00:00"
+  },
+  {
     "id": "qt_1791266214510",
     "_id": "qt_1791266214510",
     "quote_ref": "#QT-1003",
@@ -45,7 +79,53 @@
     "status": "New",
     "notes": "",
     "admin_notes": "",
-    "created_at": "2026-10-06T05:56:54.510406+00:00"
+    "created_at": "2026-10-06T05:56:54.510406+00:00",
+    "quote_items": [
+      {
+        "name": "Hinges",
+        "sku": "HDW-HNG-SS",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/hinges_common.jpg",
+        "brand": ""
+      },
+      {
+        "name": "Tower Bolts",
+        "sku": "HDW-TBL-BR",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/tower_bolts_common.jpg",
+        "brand": ""
+      },
+      {
+        "name": "Altraps",
+        "sku": "HDW-ALT-HD",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/altraps_common.jpg",
+        "brand": ""
+      }
+    ],
+    "item_list": [
+      {
+        "name": "Hinges",
+        "sku": "HDW-HNG-SS",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/hinges_common.jpg",
+        "brand": ""
+      },
+      {
+        "name": "Tower Bolts",
+        "sku": "HDW-TBL-BR",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/tower_bolts_common.jpg",
+        "brand": ""
+      },
+      {
+        "name": "Altraps",
+        "sku": "HDW-ALT-HD",
+        "quantity": 1,
+        "image": "/static/images/products/hardware/altraps_common.jpg",
+        "brand": ""
+      }
+    ]
   },
   {
     "id": "qt_1790519455468",
