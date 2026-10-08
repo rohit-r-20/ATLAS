@@ -3,7 +3,7 @@
 {% block title %}Admin Dashboard | Sathik Groups{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}?v=38">
 {% endblock %}
 
 {% block content %}
@@ -25,10 +25,10 @@
 
   <!-- Main View -->
   <main class="admin-main">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div class="admin-page-header">
       <div>
-        <h1 style="font-size: 1.75rem;">Dashboard Overview</h1>
-        <p style="color: var(--primary-500); font-size: 0.875rem;">Welcome back, {{ session.get('user_name', 'Admin') }}</p>
+        <h1 class="admin-page-title">Dashboard Overview</h1>
+        <p style="color: var(--primary-500); font-size: 0.875rem; margin: 0;">Welcome back, {{ session.get('user_name', 'Admin') }}</p>
       </div>
       <a href="{{ url_for('home.index') }}" class="btn btn-outline btn-sm">View Website &rarr;</a>
     </div>

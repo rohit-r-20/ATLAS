@@ -3,7 +3,7 @@
 {% block title %}Admin - Manage Brands | Sathik Groups{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}?v=38">
 <style>
   .brand-logo-thumb {
     width: 44px;
@@ -93,14 +93,14 @@
   <!-- Main Content -->
   <main class="admin-main">
     <!-- Top Action Bar -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div class="admin-page-header">
       <div>
-        <h1 style="font-size: 1.75rem; margin-bottom: 0.25rem;">Brand Management</h1>
+        <h1 class="admin-page-title">Brand Management</h1>
         <p style="color: var(--primary-500); font-size: 0.875rem; margin: 0;">
           Add, configure, and edit partner brand profiles across Sathik Groups store verticals.
         </p>
       </div>
-      <div>
+      <div class="admin-actions-bar">
         <button type="button" class="btn btn-primary" onclick="openAddBrandModal()" style="display: inline-flex; align-items: center; gap: 0.4rem;">
           ➕ Add New Brand
         </button>
@@ -237,10 +237,10 @@
      ADD NEW BRAND MODAL
      ============================================================ -->
 <div id="add-brand-modal" class="modal-backdrop">
-  <div class="modal-card" style="max-width: 480px;">
+  <div class="modal-card admin-modal-card" style="max-width: 480px; display: flex; flex-direction: column; overflow: hidden;">
     <div class="modal-header">
       <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0;">➕ Add New Brand</h3>
-      <button type="button" onclick="closeModal('add-brand-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+      <button type="button" onclick="closeModal('add-brand-modal')" class="modal-close-icon" aria-label="Close modal">&times;</button>
     </div>
     <form action="{{ url_for('admin.create_brand') }}" method="POST" enctype="multipart/form-data">
       <div class="modal-body">
@@ -283,10 +283,10 @@
      EDIT BRAND MODAL (Simplified: Brand Name, Store(s), Logo)
      ============================================================ -->
 <div id="edit-brand-modal" class="modal-backdrop">
-  <div class="modal-card" style="max-width: 480px;">
+  <div class="modal-card admin-modal-card" style="max-width: 480px; display: flex; flex-direction: column; overflow: hidden;">
     <div class="modal-header">
       <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0;">✏️ Edit Brand</h3>
-      <button type="button" onclick="closeModal('edit-brand-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+      <button type="button" onclick="closeModal('edit-brand-modal')" class="modal-close-icon" aria-label="Close modal">&times;</button>
     </div>
     <form id="edit-brand-form" action="" method="POST" enctype="multipart/form-data">
       <input type="hidden" name="slug" id="edit-brand-slug">

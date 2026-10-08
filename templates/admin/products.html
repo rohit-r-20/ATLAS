@@ -3,7 +3,7 @@
 {% block title %}{% if current_view == 'recycle_bin' %}Recycle Bin - Products{% else %}Admin - Manage Products{% endif %} | Sathik Groups{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}?v=38">
 <style>
   .admin-table td {
     vertical-align: middle;
@@ -71,9 +71,9 @@
   </aside>
 
   <main class="admin-main">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div class="admin-page-header">
       <div>
-        <h1 style="font-size: 1.75rem; margin-bottom: 0.25rem;">
+        <h1 class="admin-page-title">
           {% if current_view == 'recycle_bin' %}
             🗑️ Products Recycle Bin
           {% else %}
@@ -89,7 +89,7 @@
         </p>
       </div>
 
-      <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap: wrap;">
+      <div class="admin-actions-bar">
         {% if current_view == 'recycle_bin' %}
           <a href="{{ url_for('admin.products', business=current_business) }}" class="btn btn-outline" style="text-decoration:none;">
             ← Back to Active Products
@@ -114,7 +114,7 @@
     </div>
 
     <!-- Active vs Staging vs Recycle Bin Switcher Tabs -->
-    <div style="display: flex; gap: 0.6rem; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap;">
+    <div class="admin-filter-tabs">
       <a href="{{ url_for('admin.products', business=current_business) }}" 
          class="btn btn-sm {% if current_view not in ('recycle_bin', 'staging') %}btn-primary{% else %}btn-outline{% endif %}" 
          style="display: inline-flex; align-items: center; gap: 0.45rem; border-radius: 9999px; padding: 0.45rem 1.1rem; text-decoration: none; font-weight: 600;">
@@ -156,7 +156,7 @@
     {% endif %}
 
     <!-- Store Filter Tabs -->
-    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; flex-wrap: wrap;">
+    <div class="admin-store-tabs">
       <a href="{{ url_for('admin.products', view=current_view) }}" style="padding: 0.5rem 1rem; text-decoration: none; font-weight: 600; color: {% if not current_business %}var(--primary-700, #0369a1){% else %}var(--text-muted, #64748b){% endif %}; border-bottom: 2px solid {% if not current_business %}var(--primary-600, #0284c7){% else %}transparent{% endif %}; margin-bottom: -0.6rem;">
         All Stores
       </a>
@@ -403,19 +403,19 @@
 
     <!-- Create Product Modal (Only exits on 'x' click, never on outside backdrop click) -->
     <div id="create-product-modal" class="modal-backdrop static-backdrop" data-static-backdrop="true">
-      <div class="modal-card" style="max-width: 48rem; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-card admin-modal-card" style="max-width: 48rem; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;">
         <div class="modal-header">
           <h3 style="font-size: 1.25rem;">Add New Product</h3>
-          <button type="button" onclick="closeModal('create-product-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+          <button type="button" onclick="closeModal('create-product-modal')" class="modal-close-icon" aria-label="Close modal">&times;</button>
         </div>
         <div class="modal-body">
-          <form id="create-product-form" action="{{ url_for('admin.create_product') }}" method="POST" enctype="multipart/form-data" onsubmit="syncVariantsJson('create')">
+          <form id="create-product-form" action="{{ url_for('admin.create_product') }}" method="POST" enctype="multipart/form-data" onsubmit="pruneEmptyVariantCards('create'); syncVariantsJson('create');">
             <div class="form-group">
               <label class="form-label">Product Name *</label>
               <input type="text" name="name" class="form-input" placeholder="e.g. Water Proofing Chemicals or CPVC Adapter" required>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="admin-form-grid-2">
               <div class="form-group">
                 <label class="form-label">SKU / Code *</label>
                 <input type="text" name="sku" class="form-input" placeholder="e.g. AST-CPVC-001" required>
@@ -433,9 +433,9 @@
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="admin-form-grid-2">
               <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.35rem;">
                   <label class="form-label" style="margin-bottom: 0;">Category *</label>
                   <div style="display: flex; gap: 0.35rem; align-items: center;">
                     <button type="button" class="btn-text-link" onclick="toggleNewCategoryBox('create')" style="font-size: 0.75rem; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;">
@@ -467,7 +467,7 @@
               </div>
 
               <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.35rem;">
                   <label class="form-label" style="margin-bottom: 0;">Element / Subcategory *</label>
                   <button type="button" class="btn-text-link" onclick="toggleNewSubcategoryBox('create')" style="font-size: 0.75rem; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;">
                     + New Element
@@ -542,7 +542,7 @@
               <input type="file" name="image" class="form-input" accept="image/*">
             </div>
 
-            <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
               <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; cursor: pointer;">
                 <input type="checkbox" name="is_featured" value="1"> Featured Product
               </label>
@@ -551,7 +551,7 @@
               </label>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Save Product to Catalogue</button>
+            <button type="submit" class="btn btn-primary btn-block admin-submit-btn">Save Product to Catalogue</button>
           </form>
         </div>
       </div>
@@ -559,19 +559,19 @@
 
     <!-- Edit Product Modal (Only exits on 'x' click, never on outside backdrop click) -->
     <div id="edit-product-modal" class="modal-backdrop static-backdrop" data-static-backdrop="true">
-      <div class="modal-card" style="max-width: 48rem; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-card admin-modal-card" style="max-width: 48rem; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;">
         <div class="modal-header">
           <h3 style="font-size: 1.25rem;">Edit Product</h3>
-          <button type="button" onclick="closeModal('edit-product-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+          <button type="button" onclick="closeModal('edit-product-modal')" class="modal-close-icon" aria-label="Close modal">&times;</button>
         </div>
         <div class="modal-body">
-          <form id="edit-product-form" action="" method="POST" enctype="multipart/form-data" onsubmit="syncVariantsJson('edit')">
+          <form id="edit-product-form" action="" method="POST" enctype="multipart/form-data" onsubmit="pruneEmptyVariantCards('edit'); syncVariantsJson('edit');">
             <div class="form-group">
               <label class="form-label">Product Name *</label>
               <input type="text" id="edit-name" name="name" class="form-input" required>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="admin-form-grid-2">
               <div class="form-group">
                 <label class="form-label">SKU / Code *</label>
                 <input type="text" id="edit-sku" name="sku" class="form-input" required>
@@ -589,9 +589,9 @@
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="admin-form-grid-2">
               <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.35rem;">
                   <label class="form-label" style="margin-bottom: 0;">Category *</label>
                   <div style="display: flex; gap: 0.35rem; align-items: center;">
                     <button type="button" class="btn-text-link" onclick="toggleNewCategoryBox('edit')" style="font-size: 0.75rem; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;">
@@ -623,7 +623,7 @@
               </div>
 
               <div class="form-group">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.35rem;">
                   <label class="form-label" style="margin-bottom: 0;">Element / Subcategory *</label>
                   <button type="button" class="btn-text-link" onclick="toggleNewSubcategoryBox('edit')" style="font-size: 0.75rem; color: #0284c7; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 4px; padding: 0.15rem 0.5rem; cursor: pointer; font-weight: 600;">
                     + New Element
@@ -715,7 +715,7 @@
               </label>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+            <button type="submit" class="btn btn-primary btn-block admin-submit-btn">Save Changes</button>
           </form>
         </div>
       </div>
@@ -723,7 +723,7 @@
 
     <!-- Category Manager Modal -->
     <div id="category-manager-modal" class="modal-backdrop">
-      <div class="modal-card" style="max-width: 50rem; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-card admin-modal-card" style="max-width: 50rem; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;">
         <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 0.85rem;">
           <div>
             <h3 style="font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; margin: 0; color: #1e293b;">
@@ -733,7 +733,7 @@
               Add new categories or delete existing ones. Deleted category items are safely moved to the <strong>Staging Area</strong>.
             </p>
           </div>
-          <button type="button" onclick="closeModal('category-manager-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color: #64748b;">&times;</button>
+          <button type="button" onclick="closeModal('category-manager-modal')" class="modal-close-icon" aria-label="Close modal">&times;</button>
         </div>
 
         <div class="modal-body" style="overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 1.25rem;">
@@ -860,7 +860,7 @@
 
     // Staging / Uncategorized Option
     const stagingOpt = document.createElement('option');
-    stagingOpt.value = '';
+    stagingOpt.value = 'staging';
     stagingOpt.textContent = '📦 Staging Area (Uncategorized)';
     stagingOpt.style.color = '#d97706';
     if (!targetCategorySlug) {
@@ -910,7 +910,7 @@
     const selectedCat = catSelect.value;
     subSelect.innerHTML = '';
 
-    if (!selectedCat || selectedCat === '') {
+    if (!selectedCat || selectedCat === '' || selectedCat === 'staging') {
       const uncategorizedSubOpt = document.createElement('option');
       uncategorizedSubOpt.value = 'uncategorized';
       uncategorizedSubOpt.textContent = 'Uncategorized';
@@ -1596,17 +1596,17 @@
           ✕ Remove
         </button>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 0.5rem; margin-bottom: 0.5rem;">
+      <div class="variant-grid-row" style="margin-bottom: 0.5rem;">
         <div>
           <label style="font-size: 0.7rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">Brand Name *</label>
-          <input type="text" list="preset-brands" class="form-input variant-brand-name" placeholder="e.g. Dr.Fixit" value="${escapeHtml(brandName)}" oninput="syncVariantsJson('${mode}')" style="font-size: 0.8rem; padding: 0.35rem 0.5rem;" required>
+          <input type="text" list="preset-brands" class="form-input variant-brand-name" placeholder="e.g. Dr.Fixit" value="${escapeHtml(brandName)}" oninput="syncVariantsJson('${mode}')" style="font-size: 0.8rem; padding: 0.35rem 0.5rem;">
         </div>
         <div>
           <label style="font-size: 0.7rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">Sub-Product / Variant Title</label>
           <input type="text" class="form-input variant-name" placeholder="e.g. Dr.Fixit Waterproofing Chemical" value="${escapeHtml(variantName)}" oninput="syncVariantsJson('${mode}')" style="font-size: 0.8rem; padding: 0.35rem 0.5rem;">
         </div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 0.5rem;">
+      <div class="variant-grid-row">
         <div>
           <label style="font-size: 0.7rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">Variant SKU</label>
           <input type="text" class="form-input variant-sku" placeholder="e.g. HDW-WPF-DRFIXIT" value="${escapeHtml(variantSku)}" oninput="syncVariantsJson('${mode}')" style="font-size: 0.8rem; padding: 0.35rem 0.5rem; font-family: monospace;">
@@ -1621,6 +1621,21 @@
     container.appendChild(card);
     updateVariantsBadge(mode);
     syncVariantsJson(mode);
+  }
+
+  function pruneEmptyVariantCards(mode) {
+    const container = document.getElementById(mode + '-variants-container');
+    if (!container) return;
+    const cards = container.querySelectorAll('.variant-card');
+    cards.forEach(card => {
+      const bName = card.querySelector('.variant-brand-name')?.value?.trim() || '';
+      const vName = card.querySelector('.variant-name')?.value?.trim() || '';
+      if (!bName && !vName) {
+        card.remove();
+      }
+    });
+    renderEmptyVariantHint(mode);
+    updateVariantsBadge(mode);
   }
 
   function removeVariantRow(mode, btn) {

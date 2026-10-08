@@ -3,7 +3,7 @@
 {% block title %}{% if current_view == 'recycle_bin' %}Recycle Bin - Enquiries{% else %}Admin - Manage Enquiries{% endif %} | Sathik Groups{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}?v=38">
 <style>
   .enq-item-box {
     background: #f8fafc;
@@ -53,9 +53,9 @@
 
   <main class="admin-main">
     <!-- Header with Title & Contextual Action Buttons -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div class="admin-page-header">
       <div>
-        <h1 style="font-size: 1.75rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem;">
+        <h1 class="admin-page-title" style="display: flex; align-items: center; gap: 0.5rem;">
           {% if current_view == 'recycle_bin' %}
             <span>🗑️ Enquiries Recycle Bin</span>
           {% else %}
@@ -71,7 +71,7 @@
         </p>
       </div>
       
-      <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+      <div class="admin-actions-bar">
         {% if current_view == 'recycle_bin' %}
           <a href="{{ url_for('admin.enquiries') }}" class="btn btn-outline" style="text-decoration:none; font-weight:600;">
             ← Back to Active Enquiries
@@ -84,7 +84,7 @@
           </form>
           {% endif %}
         {% else %}
-          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+          <div class="admin-filter-tabs" style="margin-bottom: 0;">
             <a href="{{ url_for('admin.enquiries') }}" class="btn btn-sm {% if not current_status %}btn-secondary{% else %}btn-outline{% endif %}">All ({{ stats.total }})</a>
             <a href="{{ url_for('admin.enquiries', status='new') }}" class="btn btn-sm {% if current_status == 'new' %}btn-secondary{% else %}btn-outline{% endif %}">New ({{ stats.new }})</a>
             <a href="{{ url_for('admin.enquiries', status='read') }}" class="btn btn-sm {% if current_status == 'read' %}btn-secondary{% else %}btn-outline{% endif %}">Read ({{ stats.read }})</a>

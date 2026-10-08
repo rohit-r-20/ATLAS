@@ -3,7 +3,7 @@
 {% block title %}Admin - Settings | Sathik Groups{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}?v=38">
 {% endblock %}
 
 {% block content %}
@@ -21,9 +21,9 @@
   </aside>
 
   <main class="admin-main">
-    <h1 style="font-size: 1.75rem; margin-bottom: 2rem;">Company &amp; System Settings</h1>
+    <h1 class="admin-page-title" style="margin-bottom: 1.5rem;">Company &amp; System Settings</h1>
     
-    <div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 42rem;">
+    <div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 42rem; width: 100%; box-sizing: border-box;">
       <form action="{{ url_for('admin.settings') }}" method="POST">
         <div class="form-group">
           <label class="form-label">Company Name</label>

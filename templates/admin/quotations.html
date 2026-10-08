@@ -3,7 +3,7 @@
 {% block title %}Admin - Manage Quotations | Sathik Groups{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}?v=38">
 <style>
   .quote-ref-badge {
     background: #f1f5f9;
@@ -70,16 +70,16 @@
 
   <main class="admin-main">
     <!-- Header -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div class="admin-page-header">
       <div>
-        <h1 style="font-size: 1.75rem; margin-bottom: 0.25rem;">Orders &amp; Customer Quotes</h1>
+        <h1 class="admin-page-title">Orders &amp; Customer Quotes</h1>
         <p style="color: var(--primary-500); font-size: 0.875rem; margin: 0;">
           Manage customer orders, quote requests, line items, pricing, notes, and statuses.
         </p>
       </div>
 
       <!-- Quick Filter Pills -->
-      <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+      <div class="admin-filter-tabs">
         <a href="{{ url_for('admin.quotations') }}" class="btn btn-sm {% if not current_status %}btn-secondary{% else %}btn-outline{% endif %}">
           All ({{ stats.total }})
         </a>
@@ -277,13 +277,13 @@
 
 <!-- Quotation Detail Modal -->
 <div id="quote-details-modal" class="modal-backdrop">
-  <div class="modal-card" style="max-width: 650px; max-height: 90vh; overflow-y: auto;">
+  <div class="modal-card admin-modal-card" style="max-width: 650px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;">
     <div class="modal-header">
       <div>
         <h3 id="modal-quote-ref" style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0;">Quotation Details</h3>
         <div id="modal-quote-date" style="font-size: 0.75rem; color: #64748b; margin-top: 0.2rem;"></div>
       </div>
-      <button type="button" onclick="closeModal('quote-details-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+      <button type="button" onclick="closeModal('quote-details-modal')" class="modal-close-icon" aria-label="Close modal">&times;</button>
     </div>
     <div class="modal-body">
       <!-- Customer Information Card -->
@@ -347,13 +347,13 @@
      EDIT ORDER / QUOTATION MODAL
      ============================================================ -->
 <div id="edit-order-modal" class="modal-backdrop">
-  <div class="modal-card" style="max-width: 720px; max-height: 90vh; overflow-y: auto;">
+  <div class="modal-card admin-modal-card" style="max-width: 720px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;">
     <div class="modal-header">
       <div>
         <h3 id="edit-modal-title" style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0;">✏️ Edit Order / Quotation</h3>
         <div id="edit-modal-ref" style="font-size: 0.75rem; color: #64748b; margin-top: 0.2rem;"></div>
       </div>
-      <button type="button" onclick="closeModal('edit-order-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+      <button type="button" onclick="closeModal('edit-order-modal')" class="modal-close-icon" aria-label="Close modal">&times;</button>
     </div>
     <form id="edit-order-form" action="" method="POST">
       <div class="modal-body">
