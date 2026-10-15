@@ -1530,7 +1530,7 @@ across Chennai since 1964.{% endblock %}
   let currentLightboxIndex = 0;
   let awardDragDist = 0;
 
-  // Single-Line Marquee & Bi-Directional Swipe Controller
+  // Single-Line Marquee & Bi-Directional Swipe Controller (Works on all screens & desktop)
   (function initAwardsMarquee() {
     const container = document.getElementById('awards-marquee-container');
     const track = document.getElementById('awards-marquee-track');
@@ -1542,41 +1542,71 @@ across Chennai since 1964.{% endblock %}
     let startX = 0;
     let scrollStart = 0;
     let resumeTimeout = null;
-    const speed = 0.65; // slow, smooth pixel increment per frame (~38px/s at 60fps)
+    const speed = 0.85; // smooth pixel increment per frame (~50px/s at 60fps)
 
-    // Offset initially to ensure reverse swiping can wrap seamlessly right away
-    container.scrollLeft = 10;
+    // Store position in a dedicated float accumulator to eliminate integer scrollLeft truncation
+    let currentScroll = container.scrollLeft || 0;
+    if (currentScroll < 10) {
+      currentScroll = 10;
+      container.scrollLeft = 10;
+    }
+
+    let halfWidth = 0;
+    function updateDimensions() {
+      if (track && track.scrollWidth > 0) {
+        halfWidth = track.scrollWidth / 2;
+      }
+    }
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions, { passive: true });
+    window.addEventListener('load', updateDimensions, { passive: true });
 
     function checkWrap() {
-      const halfWidth = track.scrollWidth / 2;
-      if (halfWidth <= 0) return;
-      if (container.scrollLeft >= halfWidth) {
-        container.scrollLeft -= halfWidth;
-      } else if (container.scrollLeft <= 0) {
-        container.scrollLeft += halfWidth;
+      if (halfWidth <= 0) {
+        updateDimensions();
+        if (halfWidth <= 0) return;
+      }
+      if (currentScroll >= halfWidth) {
+        currentScroll -= halfWidth;
+        container.scrollLeft = currentScroll;
+      } else if (currentScroll <= 0) {
+        currentScroll += halfWidth;
+        container.scrollLeft = currentScroll;
       }
     }
 
-    // Auto-scroll loop
-    function step() {
+    let lastTime = performance.now();
+
+    // Auto-scroll animation loop with delta-time normalization
+    function step(now) {
+      const delta = Math.min((now - lastTime) / 16.67, 2.5);
+      lastTime = now;
+
       if (!isPaused && !isDragging) {
-        container.scrollLeft += speed;
+        currentScroll += speed * delta;
         checkWrap();
+        container.scrollLeft = Math.round(currentScroll);
       }
       requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
 
-    // Scroll event listener for inertial & wheel scroll wrap
-    container.addEventListener('scroll', checkWrap, { passive: true });
+    // Keep accumulator in sync if user scrolls directly
+    container.addEventListener('scroll', () => {
+      if (isDragging) {
+        currentScroll = container.scrollLeft;
+        checkWrap();
+      }
+    }, { passive: true });
 
-    // Hover pause
-    if (wrapper) {
-      wrapper.addEventListener('mouseenter', () => { isPaused = true; });
-      wrapper.addEventListener('mouseleave', () => {
+    // Only pause when hovering individual award cards (not the entire background section)
+    const cards = track.querySelectorAll('.award-trophy-card');
+    cards.forEach(card => {
+      card.addEventListener('mouseenter', () => { isPaused = true; });
+      card.addEventListener('mouseleave', () => {
         if (!isDragging) isPaused = false;
       });
-    }
+    });
 
     // Mouse Drag (Desktop)
     container.addEventListener('mousedown', (e) => {
@@ -1585,6 +1615,7 @@ across Chennai since 1964.{% endblock %}
       awardDragDist = 0;
       startX = e.pageX;
       scrollStart = container.scrollLeft;
+      currentScroll = scrollStart;
       container.classList.add('is-dragging');
       if (resumeTimeout) clearTimeout(resumeTimeout);
     });
@@ -1593,15 +1624,18 @@ across Chennai since 1964.{% endblock %}
       if (!isDragging) return;
       const walk = e.pageX - startX;
       awardDragDist = Math.abs(walk);
-      container.scrollLeft = scrollStart - walk;
+      currentScroll = scrollStart - walk;
       checkWrap();
+      container.scrollLeft = Math.round(currentScroll);
     });
 
     window.addEventListener('mouseup', () => {
       if (!isDragging) return;
       isDragging = false;
       container.classList.remove('is-dragging');
-      resumeTimeout = setTimeout(() => { isPaused = false; }, 1200);
+      currentScroll = container.scrollLeft;
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+      resumeTimeout = setTimeout(() => { isPaused = false; }, 800);
     });
 
     // Touch Swipe (Mobile & Tablets)
@@ -1615,6 +1649,7 @@ across Chennai since 1964.{% endblock %}
       awardDragDist = 0;
       touchStartX = e.touches[0].pageX;
       touchScrollStart = container.scrollLeft;
+      currentScroll = touchScrollStart;
       if (resumeTimeout) clearTimeout(resumeTimeout);
     }, { passive: true });
 
@@ -1623,25 +1658,30 @@ across Chennai since 1964.{% endblock %}
       const touchX = e.touches[0].pageX;
       const walk = touchX - touchStartX;
       awardDragDist = Math.abs(walk);
-      container.scrollLeft = touchScrollStart - walk;
+      currentScroll = touchScrollStart - walk;
       checkWrap();
+      container.scrollLeft = Math.round(currentScroll);
     }, { passive: true });
 
     container.addEventListener('touchend', () => {
       isDragging = false;
-      resumeTimeout = setTimeout(() => { isPaused = false; }, 1500);
+      currentScroll = container.scrollLeft;
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+      resumeTimeout = setTimeout(() => { isPaused = false; }, 800);
     }, { passive: true });
 
     // Floating Arrow manual button scrolling
     window.manualAwardScroll = function (direction) {
       isPaused = true;
       if (resumeTimeout) clearTimeout(resumeTimeout);
-      const stepAmount = direction * 180;
-      container.scrollBy({ left: stepAmount, behavior: 'smooth' });
-      setTimeout(() => {
-        checkWrap();
-        resumeTimeout = setTimeout(() => { isPaused = false; }, 800);
-      }, 400);
+      const stepAmount = direction * 220;
+      currentScroll += stepAmount;
+      checkWrap();
+      container.scrollTo({ left: currentScroll, behavior: 'smooth' });
+      resumeTimeout = setTimeout(() => {
+        currentScroll = container.scrollLeft;
+        isPaused = false;
+      }, 900);
     };
 
     // Card click handler (distinguish swipe drag from click)

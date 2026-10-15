@@ -432,6 +432,71 @@ body.modal-open {
     color: #C2410C !important;
   }
 
+  /* Mobile Specialized Stores Dropdown & Submenu Accordion */
+  .stores-nav-link-wrap {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+
+  .stores-nav-link {
+    flex: 1 !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  }
+
+  .stores-mobile-toggle-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 44px !important;
+    height: 48px !important;
+    background: transparent !important;
+    border: none !important;
+    color: #0F172A !important;
+    cursor: pointer !important;
+    transition: transform 0.25s ease !important;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  }
+
+  .stores-mobile-toggle-btn.is-open {
+    transform: rotate(180deg) !important;
+    color: #C2410C !important;
+  }
+
+  .stores-dropdown-menu {
+    position: static !important;
+    display: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+    background: #F8FAFC !important;
+    padding: 0.4rem 0 !important;
+    margin: 0.4rem 0 0.6rem !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  }
+
+  .stores-dropdown-menu.mobile-open {
+    display: block !important;
+  }
+
+  .stores-dropdown-link {
+    padding: 10px 18px !important;
+    color: #374151 !important;
+    font-size: 0.9rem !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .stores-menu-item:last-child .stores-dropdown-link {
+    border-bottom: none !important;
+  }
+
+
   /* Mobile-only CTA buttons inside menu */
   .mobile-only-actions {
     display: flex !important;

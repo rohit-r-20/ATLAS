@@ -34,11 +34,59 @@
         </a>
       </li>
 
-      <li role="none">
-        <a href="{{ url_for('home.index') }}#stores" role="menuitem" class="nav-link">
-          Specialized Stores
-        </a>
+      <li class="nav-item dropdown stores-nav-item" role="none">
+        <div class="stores-nav-link-wrap">
+          <a href="{{ url_for('home.index') }}#stores" role="menuitem" class="nav-link stores-nav-link" id="specializedStoresNav" aria-haspopup="true" aria-expanded="false">
+            <span>Specialized Stores</span>
+            <svg class="stores-caret-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </a>
+          <!-- Mobile toggle button for drawer accordion -->
+          <button type="button" class="stores-mobile-toggle-btn" aria-label="Toggle Specialized Stores sub-menu" onclick="toggleStoresMobileDropdown(event)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Dropdown Menu: Clean White Card with 6 Category Items (Matching Reference Image) -->
+        <div class="stores-dropdown-menu" id="storesDropdownMenu" role="menu" aria-label="Specialized Stores Menu">
+          <ul class="stores-menu-list" role="none">
+            <li class="stores-menu-item" role="none">
+              <a href="{{ url_for('product.product_list', business='hardware') }}" class="stores-dropdown-link" role="menuitem">
+                <span>Hardwares</span>
+              </a>
+            </li>
+            <li class="stores-menu-item" role="none">
+              <a href="{{ url_for('product.product_list', category='paints-chemicals') }}" class="stores-dropdown-link" role="menuitem">
+                <span>Paints</span>
+              </a>
+            </li>
+            <li class="stores-menu-item" role="none">
+              <a href="{{ url_for('product.product_list', category='pumps') }}" class="stores-dropdown-link" role="menuitem">
+                <span>Pumps &amp; Plumbing</span>
+              </a>
+            </li>
+            <li class="stores-menu-item" role="none">
+              <a href="{{ url_for('product.product_list', business='plumbing', category='power-tools') }}" class="stores-dropdown-link" role="menuitem">
+                <span>Industrial power tools</span>
+              </a>
+            </li>
+            <li class="stores-menu-item" role="none">
+              <a href="{{ url_for('product.product_list', business='bath-kitchen') }}" class="stores-dropdown-link" role="menuitem">
+                <span>Bath &amp; Sanitaryware</span>
+              </a>
+            </li>
+            <li class="stores-menu-item" role="none">
+              <a href="{{ url_for('product.product_list', category='electrical-fans') }}" class="stores-dropdown-link" role="menuitem">
+                <span>Electricals</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
+
 
       <li role="none">
         <a href="{{ url_for('home.index') }}#product-range" role="menuitem" class="nav-link">

@@ -32,14 +32,16 @@ def create_app(config_class=Config):
     # Initialize Supabase Client
     init_supabase(app)
 
-    # Global Template Context Processor (inject company info and canonical_url in all templates)
+    # Global Template Context Processor (inject company info, canonical_url, and specialized_stores_nav in all templates)
     from utils.constants import COMPANY_INFO
     from utils.seo import get_canonical_url
+    from utils.helpers import get_specialized_stores_nav
     @app.context_processor
     def inject_global_context():
         return {
             'company': COMPANY_INFO,
-            'canonical_url': get_canonical_url()
+            'canonical_url': get_canonical_url(),
+            'specialized_stores_nav': get_specialized_stores_nav()
         }
 
 

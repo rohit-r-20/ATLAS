@@ -53,8 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (toggleBtn) toggleBtn.setAttribute('aria-expanded', isOpen);
   };
 
-  // Close menu when any nav-link or dropdown-item is tapped
-  document.querySelectorAll('.nav-link, .dropdown-item').forEach(link => {
+  // Close menu when any nav-link, dropdown-item, or product link is tapped
+  document.querySelectorAll('.nav-link, .dropdown-item, .flyout-product-item, .store-menu-link').forEach(link => {
     link.addEventListener('click', () => {
       if (navMenu && navMenu.classList.contains('active')) {
         navMenu.classList.remove('active');
@@ -66,6 +66,64 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  /* ──────────────────────────────────────────────────────────
+     2c. SPECIALIZED STORES DROPDOWN (SMOOTH HOVER WITH GRACE PERIOD)
+     ────────────────────────────────────────────────────────── */
+  const storesNavItem = document.querySelector('.stores-nav-item');
+  const storesDropdownMenu = document.getElementById('storesDropdownMenu');
+  let storesDropdownTimer = null;
+
+  function showStoresDropdown() {
+    if (storesDropdownTimer) {
+      clearTimeout(storesDropdownTimer);
+      storesDropdownTimer = null;
+    }
+    if (window.innerWidth >= 769 && storesNavItem) {
+      storesNavItem.classList.add('is-hovered');
+    }
+  }
+
+  function hideStoresDropdown() {
+    if (storesDropdownTimer) clearTimeout(storesDropdownTimer);
+    storesDropdownTimer = setTimeout(() => {
+      if (window.innerWidth >= 769 && storesNavItem) {
+        storesNavItem.classList.remove('is-hovered');
+      }
+    }, 350); // 350ms grace period prevents accidental closes when cursor moves
+  }
+
+  if (storesNavItem) {
+    storesNavItem.addEventListener('mouseenter', showStoresDropdown);
+    storesNavItem.addEventListener('mouseleave', hideStoresDropdown);
+  }
+
+  if (storesDropdownMenu) {
+    storesDropdownMenu.addEventListener('mouseenter', showStoresDropdown);
+    storesDropdownMenu.addEventListener('mouseleave', hideStoresDropdown);
+  }
+
+  // If top link is clicked, close immediately
+  const specializedStoresNav = document.getElementById('specializedStoresNav');
+  if (specializedStoresNav) {
+    specializedStoresNav.addEventListener('click', () => {
+      if (storesDropdownTimer) clearTimeout(storesDropdownTimer);
+      if (storesNavItem) storesNavItem.classList.remove('is-hovered');
+    });
+  }
+
+  // Mobile drawer accordion toggle
+  window.toggleStoresMobileDropdown = function(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const menu = document.getElementById('storesDropdownMenu');
+    const btn = document.querySelector('.stores-mobile-toggle-btn');
+    if (menu) menu.classList.toggle('mobile-open');
+    if (btn) btn.classList.toggle('is-open');
+  };
+
 
   /* ──────────────────────────────────────────────────────────
      2b. MOBILE VIEW STORE TITLE SCROLL TRANSITION

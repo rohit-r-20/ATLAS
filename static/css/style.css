@@ -662,7 +662,7 @@ h1, h2, h3, h4, h5, h6 {
   list-style: none;
 }
 
-.dropdown:hover .dropdown-menu {
+.dropdown:hover > .dropdown-menu {
   display: block;
 }
 
@@ -681,6 +681,150 @@ h1, h2, h3, h4, h5, h6 {
   background-color: rgba(255, 255, 255, 0.08);
   color: #F59E0B;
 }
+
+/* ──────────────────────────────────────────────────────────
+   SPECIALIZED STORES MULTI-LEVEL DROPDOWN SYSTEM
+   ────────────────────────────────────────────────────────── */
+
+.stores-nav-item {
+  position: relative;
+}
+
+.stores-nav-link-wrap {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.stores-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.stores-caret-icon {
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  color: currentColor;
+  opacity: 0.75;
+  flex-shrink: 0;
+}
+
+.stores-nav-item:hover .stores-caret-icon,
+.stores-nav-item.is-hovered .stores-caret-icon {
+  transform: rotate(180deg);
+  opacity: 1;
+  color: #C2410C;
+}
+
+.stores-mobile-toggle-btn {
+  display: none;
+}
+
+/* ── Specialized Stores Dropdown (Reference: Clean White Card with Rounded Corners) ── */
+.stores-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 250px;
+  min-width: 240px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.14), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+  padding: 8px 0;
+  margin-top: 0;
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1050;
+  list-style: none;
+  overflow: visible; /* Never clip hover bridge! */
+}
+
+/* Hover bridge between nav link and dropdown menu */
+.stores-dropdown-menu::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -25px;
+  right: -25px;
+  height: 35px;
+  background: transparent;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* Nav item downwards bridge */
+.stores-nav-item::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: -15px;
+  right: -15px;
+  height: 25px;
+  background: transparent;
+  pointer-events: auto;
+}
+
+/* Open on hover on desktop (> 768px) */
+@media (min-width: 769px) {
+  .stores-nav-item:hover > .stores-dropdown-menu,
+  .stores-nav-item.is-hovered > .stores-dropdown-menu,
+  .stores-dropdown-menu:hover {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+  }
+}
+
+.stores-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.stores-menu-item {
+  position: relative;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.stores-menu-item:first-child .stores-dropdown-link {
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+
+.stores-menu-item:last-child .stores-dropdown-link {
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+.stores-dropdown-link {
+  display: block;
+  padding: 10px 22px;
+  color: #374151;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  line-height: 1.45;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.stores-dropdown-link:hover {
+  background-color: #F8FAFC;
+  color: #EA580C;
+  padding-left: 26px;
+}
+
 
 /* Footer */
 .footer {
