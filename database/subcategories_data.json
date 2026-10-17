@@ -466,5 +466,17 @@
     "order": 5,
     "is_active": true,
     "created_at": "2026-09-25T08:30:00.000000"
+  },
+  {
+    "id": "subcat_1792226150755",
+    "_id": "subcat_1792226150755",
+    "name": "General BOOSTER PUMPS",
+    "slug": "general-booster-pumps",
+    "category_slug": "booster-pumps",
+    "business_slug": "bath-kitchen",
+    "icon": "📦",
+    "order": 43,
+    "is_active": true,
+    "created_at": "2026-10-17T08:35:50.755281"
   }
 ]
